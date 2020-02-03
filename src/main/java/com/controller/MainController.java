@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example;
+package com.controller;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -36,7 +36,7 @@ import java.util.Map;
 
 @Controller
 @SpringBootApplication
-public class Main {
+public class MainController {
 
   @Value("${spring.datasource.url}")
   private String dbUrl;
@@ -45,12 +45,17 @@ public class Main {
   private DataSource dataSource;
 
   public static void main(String[] args) throws Exception {
-    SpringApplication.run(Main.class, args);
+    SpringApplication.run(MainController.class, args);
   }
 
   @RequestMapping("/")
   String index() {
     return "index";
+  }
+
+  @RequestMapping("/report")
+  String repTest() {
+    return "report1test";
   }
 
   @RequestMapping("/db")
