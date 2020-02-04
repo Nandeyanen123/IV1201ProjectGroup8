@@ -7,7 +7,16 @@
 <body>
 <div>
     <h2>Test page for the first report</h2>
-    <button type="button">Test for sending</button>
+    <form action="#" th:action="@{/report1test/add}" th:object="${person}" method="post">
+        <p>Name: <input type="text" th:field="*{name}" /></p>
+        <p>Surname: <input type="text" th:field="*{surName}" /></p>
+        <p>SSN: <input type="text" th:field="*{ssn}" /></p>
+        <p>Email: <input type="text" th:field="*{email}" /></p>
+        <p>Password: <input type="text" th:field="*{password}" /></p>
+        <p>Role ID: <input type="text" th:field="*{roleId}" /></p>
+        <p>Username: <input type="text" th:field="*{userName}" /></p>
+        <input type="submit" value="Submit" />
+    </form>
 </div>
 
 </body>

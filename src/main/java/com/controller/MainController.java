@@ -1,21 +1,7 @@
-/*
- * Copyright 2002-2014 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.controller;
 
+import com.model.Person;
+import com.service.PersonRepository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -35,18 +22,50 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @Controller
-@SpringBootApplication
+//@SpringBootApplication
+@RequestMapping(path="/")
 public class MainController {
 
-  @Value("${spring.datasource.url}")
-  private String dbUrl;
-
   @Autowired
-  private DataSource dataSource;
+  private PersonRepository personRepository;
 
-  public static void main(String[] args) throws Exception {
-    SpringApplication.run(MainController.class, args);
+  @PostMapping(path="/report1test/add")
+  public String addNewPerson (@RequestParam String name, String surName, String ssn,
+                                            String email, String password, Integer roleId, String userName){
+    Person p = new Person();
+    p.setName(name);
+    p.setSurName(surName);
+    p.setSsn(ssn);
+    p.setEmail(email);
+    p.setPassword(password);
+    p.setRoleId(roleId);
+    p.setUserName(userName);
+    personRepository.save(p);
+    return "redirect:/report1testresult";
   }
+
+  @GetMapping(path="/report1testresult")
+  //public @ResponseBody String getAllPeople(Model model){
+      public String getAllPeople(Model model){
+      Iterable<Person> people = personRepository.findAll();
+      model.addAttribute("people",people);
+    return "report1testresult";
+  }
+
+  /*public static void main(String[] args) throws Exception {
+    SpringApplication.run(MainController.class, args);
+  }*/
+
+    @GetMapping("/report1test")
+    public String personForm(Model model) {
+        model.addAttribute("person", new Person());
+        return "report1test";
+    }
+
+    @PostMapping("/report1test")
+    public String personSubmit(@ModelAttribute Person person) {
+        return "report1testresult";
+    }
 
   @RequestMapping("/")
   String index() {
@@ -58,7 +77,8 @@ public class MainController {
     return "report1test";
   }
 
-  @RequestMapping("/db")
+
+  /*@RequestMapping("/db")
   String db(Map<String, Object> model) {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
@@ -88,6 +108,6 @@ public class MainController {
       config.setJdbcUrl(dbUrl);
       return new HikariDataSource(config);
     }
-  }
+  }*/
 
 }
