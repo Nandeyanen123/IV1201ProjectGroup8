@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +28,14 @@ import java.util.Map;
 public class MainController {
 
   @Autowired
+  private Person p;
+  @Autowired
   private PersonRepository personRepository;
 
   @PostMapping(path="/report1test/add")
-  public String addNewPerson (@RequestParam String name, String surName, String ssn,
-                                            String email, String password, Integer roleId, String userName){
-    Person p = new Person();
+  public String addNewPerson (@Nullable @RequestParam String name, String surName, String ssn,
+                              String email, String password, Integer roleId, String userName){
+    //Person p = new Person();
     p.setName(name);
     p.setSurName(surName);
     p.setSsn(ssn);
