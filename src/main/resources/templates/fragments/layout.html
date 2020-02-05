@@ -1,5 +1,5 @@
 <!doctype html>
-<html th:fragment="layout (template, menu)">
+<html th:fragment="layout (template, menu)" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>IV1201 Project</title>
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
@@ -42,7 +42,7 @@
 
     </nav>
     <div th:replace="${template}"/>
-
+    <div th:replace="fragments/footer.html :: footer"></div>
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
