@@ -1,16 +1,12 @@
 package com.controller;
 
 import com.model.Person;
-import com.service.PersonRepository;
+import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.ConstraintViolationException;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 
 @Controller
@@ -68,4 +64,8 @@ public class MainController {
     return "report1test";
   }
 
+  @GetMapping("/login")
+  public String userLogin(){
+    return "login";
+  }
 }
