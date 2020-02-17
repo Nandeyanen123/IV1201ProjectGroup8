@@ -1,6 +1,7 @@
 package com.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="person")
@@ -14,16 +15,19 @@ public class Person {
     private String name;
     @Column(name="surname")
     private String surName;
-    @Column(name="ssn")
+    @Column(name="ssn", unique = true)
     private String ssn;
     @Column(name="email")
     private String email;
     @Column(name="password")
     private String password;
-    @Column(name="role_id")
+    @JoinColumn(name="role_id")
     private Integer roleId;
     @Column(name="username")
     private String userName;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name= "role_id", nullable = false)
+    private Role role;
 
     public Integer getId() {
         return id;
@@ -87,5 +91,13 @@ public class Person {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

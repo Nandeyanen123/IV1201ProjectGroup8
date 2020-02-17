@@ -1,8 +1,17 @@
-package com.service;
+package com.repository;
 
 import com.model.Person;
+import com.model.Role;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
-public interface PersonRepository extends CrudRepository<Person, Integer> {
+import java.util.List;
+import java.util.Optional;
+
+public interface PersonRepository extends JpaRepository<Person, Integer> {
+
+    Optional<Person> findByEmail(String email);
 
 }
