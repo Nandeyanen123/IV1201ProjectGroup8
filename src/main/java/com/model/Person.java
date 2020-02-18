@@ -20,10 +20,18 @@ public class Person {
     private String email;
     @Column(name="password")
     private String password;
-    @Column(name="role_id")
-    private Integer roleId;
     @Column(name="username")
     private String userName;
+    @Column(name="role_id")
+    private Integer roleId;
+
+    //@ManyToOne specifierar att det är många personer med en roll relation. Det är detta kommando som
+    //gör den främmande nyckeln.
+    //@JoinColumn konfigurerar en existerande column till främmande nyckel.
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="role_id", insertable = false, updatable = false)
+    private Role role;
+
 
     public Integer getId() {
         return id;
@@ -75,6 +83,10 @@ public class Person {
 
     public Integer getRoleId() {
         return roleId;
+    }
+
+    public String getRoleName(){
+        return role.getName();
     }
 
     public void setRoleId(Integer roleId) {
