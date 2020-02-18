@@ -64,7 +64,7 @@ public class MainController {
     return "report1test";
   }
 
-  @GetMapping("/login")
+  @GetMapping("/")
   public String userLogin(){
     return "login";
   }
