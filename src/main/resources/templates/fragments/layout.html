@@ -7,34 +7,8 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-default navbar-static-top navbar-inverse">
-        <div class="container">
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="/"><span class="glyphicon glyphicon-home"></span> Recruitment app</a>
-                </li>
-                <li>
-                    <a href="/"><span class="glyphicon glyphicon-user"></span> User profile</a>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-info-sign"></span> Options <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="/report1test">Test page for the first project report </a></li>
-                        <li class="divider"></li>
-                        <li><a href="/report1testresult">Result page for the first project report</a></li>
+<div th:replace="fragments/header.html :: header"></div>
 
-                    </ul>
-                </li>
-
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="navbar-right">
-                    <a href="https://github.com/Nandeyanen123/IV1201ProjectGroup8"><span class="glyphicon glyphicon-book"></span> Git repository</a>
-                </li>
-            </ul>
-        </div>
-
-    </nav>
     <div th:replace="${template}"/>
     <div th:replace="fragments/footer.html :: footer"></div>
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
