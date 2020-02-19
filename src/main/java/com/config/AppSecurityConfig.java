@@ -10,12 +10,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
+/**
+ * This class AppSecurityConfig extends WebSecurityConfigAdapter
+ */
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    /**
+     * This method set gives authentication to the user
+     * @return Authentivation provider
+     */
     @Bean
     public AuthenticationProvider authProvider()
     {
