@@ -2,30 +2,73 @@
   background: #532F8C;
   color: white;
   padding-bottom: 80px; }
-  .jumbotron .btn-primary {
-    background: #845ac7;
-    border-color: #845ac7; }
-    .jumbotron .btn-primary:hover {
-      background: #7646c1; }
-  .jumbotron p {
-    color: #d9ccee;
-    max-width: 75%;
-    margin: 1em auto 2em; }
-  .navbar + .jumbotron {
-    margin-top: -20px; }
-  .jumbotron .lang-logo {
-    display: block;
-    background: #B01302;
-    border-radius: 50%;
-    overflow: hidden;
-    width: 100px;
-    height: 100px;
-    margin: auto;
-    border: 2px solid white; }
-    .jumbotron .lang-logo img {
-      max-width: 100%; }
+.jumbotron .btn-primary {
+  background: #845ac7;
+  border-color: #845ac7; }
+.jumbotron .btn-primary:hover {
+  background: #7646c1; }
+.jumbotron p {
+  color: #d9ccee;
+  max-width: 75%;
+  margin: 1em auto 2em; }
+.navbar + .jumbotron {
+  margin-top: -20px; }
+.jumbotron .lang-logo {
+  display: block;
+  background: #B01302;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  border: 2px solid white; }
+.jumbotron .lang-logo img {
+  max-width: 100%; }
 
 /* footer */
-footer {
+.footer {
   text-align: center;
+}
+
+.register_container{
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+  /*background-color: #f2f2f2;*/
+  padding: 10px
+}
+
+.register_col25{
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.register_col75{
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.register_row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.register_label {
+  display: inline-block;
+}
+
+
+
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
 }

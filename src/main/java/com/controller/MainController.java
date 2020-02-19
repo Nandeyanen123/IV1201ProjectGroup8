@@ -4,9 +4,12 @@ import com.model.Person;
 import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotNull;
 
 
 @Controller
@@ -16,24 +19,26 @@ public class MainController {
   @Autowired
   private PersonRepository personRepository;
 
-  @PostMapping(path="/report1test/add")
-  public String addNewPerson (@Nullable @RequestParam String name, String surName, String ssn,
-                              String email, String password, Integer roleId, String userName){
+  @PostMapping(path="/register/add")
+  public String addNewPerson (@NotNull @RequestParam String name, String surName, String ssn,
+                              String email, String password, String userName){
     Person p = new Person();
     p.setName(name);
     p.setSurName(surName);
     p.setSsn(ssn);
     p.setEmail(email);
     p.setPassword(password);
-    p.setRoleId(roleId);
+    p.setRoleId(2);
     p.setUserName(userName);
     try {
-        personRepository.save(p);
+      personRepository.save(p);
     } catch(Exception ex){
-        return "redirect:/error";
+      return "redirect:/error";
     }
-    return "redirect:/report1testresult";
+    //Change later to redirect to something good
+    return "redirect:/";
   }
+
 
   @GetMapping(path="/report1testresult")
   public String getAllPeople(Model model){
@@ -43,18 +48,20 @@ public class MainController {
   }
 
 
-    @GetMapping("/report1test")
-    public String personForm(Model model) {
-        model.addAttribute("person", new Person());
-        return "report1test";
-    }
+  @GetMapping("/register")
+  public String personForm(Model model) {
+    model.addAttribute("person", new Person());
+    return "register";
+  }
 
-    @PostMapping("/report1test")
-    public String personSubmit(@ModelAttribute Person person) {
-        return "report1testresult";
-    }
 
-  @RequestMapping("/")
+  @PostMapping("/register")
+  public String personSubmit(@ModelAttribute Person person) {
+    return "register";
+  }
+
+
+  @RequestMapping("/index")
   String index() {
     return "index";
   }
@@ -64,8 +71,20 @@ public class MainController {
     return "report1test";
   }
 
-  @GetMapping("/")
-  public String userLogin(){
+  @RequestMapping("/")
+  public String homePage(){
+    return "index";
+  }
+
+  @RequestMapping("/login")
+  public String userLogin()
+  {
     return "login";
   }
+
+  @RequestMapping("/logout-success")
+  public String logoutPage(){
+    return "logout";
+  }
+
 }
