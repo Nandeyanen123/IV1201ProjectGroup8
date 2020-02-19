@@ -25,7 +25,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
+
     @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    /**
+     * This method makes a new DaoAuthenticationProvider variable.
+     * Then it sets the variable user detail and encodes the password
+     * @return AuthenticationProvider
+     */
     @Bean
     public AuthenticationProvider authProvider()
     {
@@ -35,6 +43,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
+    /**
+     * This method is used to configure the HttpSecurity variables settings.
+     * @param http This is the only parameter this method takes
+     * @throws Exception when it doesn't work
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
          http.csrf()
