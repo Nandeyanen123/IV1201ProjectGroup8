@@ -4,6 +4,7 @@ import com.model.Person;
 import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,14 @@ public class MainController {
     p.setSurName(surName);
     p.setSsn(ssn);
     p.setEmail(email);
+    String encodedPassword = (new BCryptPasswordEncoder().encode(password));
     p.setPassword(password);
     p.setRoleId(roleId);
     p.setUserName(userName);
     try {
         personRepository.save(p);
     } catch(Exception ex){
+        System.out.println(ex);
         return "redirect:/error";
     }
     return "redirect:/report1testresult";
@@ -54,7 +57,7 @@ public class MainController {
         return "report1testresult";
     }
 
-  @RequestMapping("/")
+  @RequestMapping("/index")
   String index() {
     return "index";
   }
@@ -64,8 +67,21 @@ public class MainController {
     return "report1test";
   }
 
-  @GetMapping("/")
-  public String userLogin(){
+  @RequestMapping("/")
+  public String homePage(){
+    return "index";
+  }
+
+  @RequestMapping("/login")
+  public String userLogin()
+  {
+
     return "login";
   }
+
+  @RequestMapping("/logout-success")
+  public String logoutPage(){
+    return "logout";
+  }
+
 }
