@@ -4,11 +4,14 @@ import com.model.Person;
 import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 
 
@@ -85,6 +88,11 @@ public class MainController {
   @RequestMapping("/logout-success")
   public String logoutPage(){
     return "logout";
+  }
+
+  @RequestMapping("/lockedpage")
+  public String lockedPage(){
+    return "lockedpage";
   }
 
 }
