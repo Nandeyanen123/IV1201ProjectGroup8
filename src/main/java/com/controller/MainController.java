@@ -80,13 +80,14 @@ public class MainController {
   }
 
   @RequestMapping("/login")
-  public String userLogin()
-  {
+  public String userLogin(){
     return "login";
   }
 
-  @RequestMapping("/logout-success")
-  public String logoutPage(){
+
+
+  @RequestMapping ("/logout")
+  public String userLogout(){
     return "logout";
   }
 
