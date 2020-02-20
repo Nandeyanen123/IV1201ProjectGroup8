@@ -1,6 +1,7 @@
 package com.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="person")
@@ -12,7 +13,7 @@ public class Person {
     private Integer id;
     @Column(name="name")
     private String name;
-    @Column(name="surname")
+    @Column(name="surname") 
     private String surName;
     @Column(name="ssn")
     private String ssn;
@@ -25,13 +26,18 @@ public class Person {
     @Column(name="role_id")
     private Integer roleId;
 
-    //@ManyToOne specifierar att det är många personer med en roll relation. Det är detta kommando som
-    //gör den främmande nyckeln.
-    //@JoinColumn konfigurerar en existerande column till främmande nyckel.
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="role_id", insertable = false, updatable = false)
     private Role role;
 
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Applikation> applikationSet;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Availability> availabilitySet;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Competence_Profile> competence_profileSet;
 
     public Integer getId() {
         return id;
@@ -83,10 +89,6 @@ public class Person {
 
     public Integer getRoleId() {
         return roleId;
-    }
-
-    public String getRoleName(){
-        return role.getName();
     }
 
     public void setRoleId(Integer roleId) {
