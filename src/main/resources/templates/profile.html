@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}">
+
 <body>
-    Welcome User
-    <br/>
-    <a href = "/logout"/>Logout</a>
+
+<div class="jumbotron text-center">
+    <div class="container">
+        <a href="/" class="lang-logo">
+            <img src="/lang-logo.png">
+        </a>
+        <h1>Welcome User</h1>
+        </br>
+        <a href="/logout">Click to Logout</a>
+        <a type="button" class="btn btn-lg btn-default" href="/login"><span class="glyphicon glyphicon-flash"></span> Press to login </a>
+        <a type="button" class="btn btn-lg btn-primary" href="https://github.com/Nandeyanen123/IV1201ProjectGroup8"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
+    </div>
+</div>
 </body>
-</html>
