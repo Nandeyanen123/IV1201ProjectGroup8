@@ -1,20 +1,14 @@
 package com.config;
 
+import com.service.CustomAuthenticationProvider;
 import com.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -24,6 +18,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private CustomAuthenticationProvider authProvider;
+
+/*
     @Bean
     public AuthenticationProvider authProvider()
     {
@@ -32,14 +31,16 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setPasswordEncoder(new BCryptPasswordEncoder());
         return provider;
     }
-
+*/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
          http.csrf()
                  .disable()
                  .authorizeRequests()
-                 .antMatchers("/", "/register/**", "/error")
+                 .antMatchers("/", "/register/**", "/error", "/login*", "/stylesheets/**", "/lang-logo.png")
                     .permitAll()
+                 .antMatchers("maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css").permitAll()
+                 .antMatchers("/lockedpage").hasAuthority("applicant")
                  .anyRequest().authenticated()
                  .and()
                  .formLogin()
@@ -47,6 +48,18 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout().invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/logout-success").permitAll();
+                .logoutSuccessUrl("/logout-success").permitAll().and().httpBasic();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authProvider);
+    }
+
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/webjars/**");
+         web.ignoring().antMatchers("/css/**","/fonts/**","/libs/**");
     }
 }
