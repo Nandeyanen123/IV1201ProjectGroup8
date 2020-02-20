@@ -83,10 +83,15 @@ public class MainController {
   public String userLogin(){
     return "login";
   }
+  @RequestMapping("/profile")
+  public String userProfile(){
+    return "profile";
+  }
 
 
 
-  @RequestMapping ("/logout")
+
+  @RequestMapping ("/logout-success")
   public String userLogout(){
     return "logout";
   }
