@@ -19,7 +19,7 @@ public class Person {
     private String ssn;
     @Column(name="email")
     private String email;
-    @Column(name="password")
+    @Column(name="  password")
     private String password;
     @Column(name="username")
     private String userName;
