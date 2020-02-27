@@ -13,8 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 
@@ -25,8 +27,8 @@ public class MainController {
 
   @Autowired
   private PersonRepository personRepository;
-  @Autowired
-  private PersonValidator personValidator;
+  //@Autowired
+  //private PersonValidator personValidator;
 
   /*@PostMapping(path="/register/add")
   public String addNewPerson (@NotNull @RequestParam String name, String surName, String ssn,
@@ -48,15 +50,17 @@ public class MainController {
     return "redirect:/";
   }*/
   @RequestMapping(path = "/register/add", method = RequestMethod.POST)
-  public String addNewPerson(@ModelAttribute("person") Person person, BindingResult result, SessionStatus status){
+    public String addNewPerson(@Valid Person person, BindingResult result, SessionStatus status){
 
-    personValidator.validate(person,result);
+    // To Create own validate
+    // personValidator.validate(person,result);
     if(result.hasErrors()){
       return "register";
     }else{
+      person.setRoleId(2);
       personRepository.save(person);
         status.setComplete();
-        return "redirect:addNew/success";
+        return "redirect:/success";
     }
   }
 

@@ -1,10 +1,14 @@
 package com.model;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
@@ -23,23 +27,41 @@ public class Person {
     @Column(name="person_id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+
     @Column(name="name")
+    @Size(min=1, max = 45 , message = "Please fill out a name (max 45 chars)")
+    @NotNull
     private String name;
+
     @Column(name="surname")
+    @Size(min=1, max = 45, message = "Please fill out a surname (max 45 chars)")
+    @NotNull
     private String surName;
+
+    //@Pattern(regexp="^(19|20)?[0-9]{6}[- ]?[0-9]{4}$", message="Use format 19000101-0101")
+    @Pattern(regexp = "^[0-9]*$" , message = "Use format yymmddxxxx")
+    @NotNull
     @Column(name="ssn", unique = true)
     private String ssn;
+
+    @NotNull
+    @Email(message = "Please enter you email")
     @Column(name="email")
     private String email;
-    @Column(name="password")
 
+    @NotNull
+    @Size(min = 5, max = 45)
+    @Column(name="password")
     private String password;
 
     @Column(name="role_id")
     private Integer roleId;
-    @Column(name="username")
 
+    @NotNull
+    @Size(min = 5, max = 45)
+    @Column(name="username")
     private String userName;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "role_id", nullable = false,updatable = false,insertable = false)
     private Role role;
