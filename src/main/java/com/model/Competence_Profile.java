@@ -4,6 +4,9 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
+/**
+ * This is a class for the table competence_profile.
+ */
 @Entity
 @Table(name="competence_profile")
 public class Competence_Profile {

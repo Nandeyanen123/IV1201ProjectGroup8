@@ -33,9 +33,6 @@ public class Person {
     @Column(name="  password")
     private String password;
 
-
-    @Column(name="role_id")
-    private Integer role_Id;
     @Column(name="username")
     private String userName;
     @Column(name="role_id")
@@ -151,10 +148,18 @@ public class Person {
         this.password = password;
     }
 
+    /**
+     * Returns a person role id from the column role
+     * @return Integer This returns the role id.
+     */
     public Integer getRoleId() {
         return roleId;
     }
 
+    /**
+     * Set a integer value inside the column role
+     * @param roleId This is the only parameter in the setRoleId method
+     */
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
@@ -175,10 +180,18 @@ public class Person {
         this.userName = userName;
     }
 
+    /**
+     * Returns the a role variable that is connected to the table Role
+     * @return Role this returns the role
+     */
     public Role getRole() {
         return role;
     }
 
+    /**
+     * Set a new role value to the user.
+     * @param role This is the only parameter in the setRole method
+     */
     public void setRole(Role role) {
         this.role = role;
     }

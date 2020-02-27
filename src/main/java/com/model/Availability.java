@@ -3,6 +3,9 @@ package com.model;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * This is the class for the table availability
+ */
 @Entity
 @Table(name="availability")
 public class Availability {

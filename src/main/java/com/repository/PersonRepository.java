@@ -10,6 +10,10 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This is the repository class for Person.
+ * It extends JpaRepository
+ */
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     Person findByUserName(String usrname);

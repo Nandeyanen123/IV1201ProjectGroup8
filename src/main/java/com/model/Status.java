@@ -3,6 +3,9 @@ package com.model;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * This is a class for the table status
+ */
 @Entity
 @Table(name="status")
 public class Status {

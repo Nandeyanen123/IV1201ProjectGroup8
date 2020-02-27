@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the class for the table competence
+ */
 @Entity
 @Table(name="competence")
 public class Competence {

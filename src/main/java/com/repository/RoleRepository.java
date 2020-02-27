@@ -7,6 +7,10 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
+/**
+ * This is the repository class for Role
+ * It extends CrudRepository
+ */
 public interface RoleRepository extends CrudRepository<Role, Integer> {
 
     Optional<Role> findById(int role_id);
