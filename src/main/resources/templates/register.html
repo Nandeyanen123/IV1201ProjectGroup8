@@ -16,6 +16,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{name}" placeholder="Your name"/></p>
+                    <p><errors path="name" cssClass="error" /></p>
                 </div>
 
                 <div class = "register_col25">
@@ -23,6 +24,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{surName}" placeholder="Last name" /></p>
+                    <p><errors path="surename" cssClass="error" /></p>
                 </div>
 
                 <div class = "register_col25">
@@ -44,6 +46,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="password" th:field="*{password}" placeholder="Password" /></p>
+                    <p><errors path="password" cssClass="error" /></p>
                 </div>
 
                 <div class = "register_col25">
@@ -51,6 +54,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{userName}" placeholder="Username" /></p>
+                    <p><errors path="username" cssClass="error" /></p>
                 </div>
             </div>
             <div class="register_row">

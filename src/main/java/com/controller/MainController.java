@@ -2,6 +2,7 @@ package com.controller;
 
 import com.model.Person;
 import com.repository.PersonRepository;
+import com.service.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,7 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
@@ -17,12 +20,15 @@ import javax.validation.constraints.NotNull;
 
 @Controller
 @RequestMapping(path="/")
+@SessionAttributes("person")
 public class MainController {
 
   @Autowired
   private PersonRepository personRepository;
+  @Autowired
+  private PersonValidator personValidator;
 
-  @PostMapping(path="/register/add")
+  /*@PostMapping(path="/register/add")
   public String addNewPerson (@NotNull @RequestParam String name, String surName, String ssn,
                               String email, String password, String userName){
     Person p = new Person();
@@ -40,8 +46,25 @@ public class MainController {
     }
     //Change later to redirect to something good
     return "redirect:/";
+  }*/
+  @RequestMapping(path = "/register/add", method = RequestMethod.POST)
+  public String addNewPerson(@ModelAttribute("person") Person person, BindingResult result, SessionStatus status){
+
+    personValidator.validate(person,result);
+    if(result.hasErrors()){
+      return "register";
+    }else{
+      personRepository.save(person);
+        status.setComplete();
+        return "redirect:addNew/success";
+    }
   }
 
+  @RequestMapping(value = "/success", method = RequestMethod.GET)
+  public String success(Model model)
+  {
+    return "addSuccess";
+  }
 
   @GetMapping(path="/report1testresult")
   public String getAllPeople(Model model){

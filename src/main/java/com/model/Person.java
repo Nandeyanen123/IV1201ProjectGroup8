@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
@@ -31,11 +32,13 @@ public class Person {
     @Column(name="email")
     private String email;
     @Column(name="password")
+
     private String password;
 
     @Column(name="role_id")
     private Integer roleId;
     @Column(name="username")
+
     private String userName;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "role_id", nullable = false,updatable = false,insertable = false)
