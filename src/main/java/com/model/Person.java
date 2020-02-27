@@ -13,7 +13,7 @@ public class Person {
     private Integer id;
     @Column(name="name")
     private String name;
-    @Column(name="surname") 
+    @Column(name="surname")
     private String surName;
     @Column(name="ssn")
     private String ssn;
