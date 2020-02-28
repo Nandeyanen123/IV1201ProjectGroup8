@@ -42,12 +42,14 @@ public class Person {
 
     //@Pattern(regexp="^(19|20)?[0-9]{6}[- ]?[0-9]{4}$", message="Use format 19000101-0101")
     @Pattern(regexp = "^[0-9]*$" , message = "Use format yymmddxxxx")
+    @Size(min = 1 , message = "Please enter ssn")
     @NotNull
     @Column(name="ssn", unique = true)
     private String ssn;
 
     @NotNull
-    @Email(message = "Please enter you email")
+    @Email(message = "Please enter your email")
+    @Size(min = 1 , message = "Please enter your email")
     @Column(name="email")
     private String email;
 

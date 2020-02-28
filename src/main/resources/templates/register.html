@@ -10,7 +10,7 @@
 </div>
     <div class="register_container">
         <!--/*@thymesVar id="person" type="com.model.Person"*/-->
-        <form action="#" th:action="@{/register/add}" th:object="${person}" method="post">
+        <form action="#" th:action="@{/register/add}" th:object="${person}" method="post" novalidate>
             <div class = "register_row">
                 <div class = "register_col25">
                     <label class="register_label" for="name">First name</label>
