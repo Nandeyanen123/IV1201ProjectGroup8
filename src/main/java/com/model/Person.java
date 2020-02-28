@@ -28,11 +28,13 @@ public class Person {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
+    @Pattern(regexp = "^[a-zA-ZåäöÅÄÖ]*$", message = "Use only letters")
     @Column(name="name")
     @Size(min=1, max = 45 , message = "Please fill out a name (max 45 chars)")
     @NotNull
     private String name;
 
+    @Pattern(regexp = "^[a-zA-ZåäöÅÄÖ]*$", message = "Use only letters")
     @Column(name="surname")
     @Size(min=1, max = 45, message = "Please fill out a surname (max 45 chars)")
     @NotNull
@@ -57,6 +59,7 @@ public class Person {
     @Column(name="role_id")
     private Integer roleId;
 
+    @Pattern(regexp = "^[a-zA-Z0-9åäöÅÄÖ]*$")
     @NotNull
     @Size(min = 5, max = 45)
     @Column(name="username", unique = true)
