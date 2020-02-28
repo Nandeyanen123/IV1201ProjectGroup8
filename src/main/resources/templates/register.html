@@ -7,54 +7,57 @@
 <body>
 <div class="register_container">
     <h2>Register account</h2>
-    <form action="#" th:action="@{/register/add}" th:object="${person}" method="post">
-    <div class = "register_row">
-        <div class = "register_col25">
-               <label class="register_label" for="name">First name</label>
-        </div>
-        <div class="register_col75">
-            <p><input type="text" th:field="*{name}" placeholder="Your name"/></p>
-        </div>
+    <div class="register_container">
+        <!--/*@thymesVar id="person" type="com.model.Person"*/-->
+        <form action="#" th:action="@{/register/add}" th:object="${person}" method="post">
+            <div class = "register_row">
+                <div class = "register_col25">
+                    <label class="register_label" for="name">First name</label>
+                </div>
+                <div class="register_col75">
+                    <p><input type="text" th:field="*{name}" placeholder="Your name"/></p>
+                </div>
 
-        <div class = "register_col25">
-            <label class="register_label" for="surName">Last name</label>
-        </div>
-        <div class="register_col75">
-            <p><input type="text" th:field="*{surName}" placeholder="Last name" /></p>
-        </div>
+                <div class = "register_col25">
+                    <label class="register_label" for="surName">Last name</label>
+                </div>
+                <div class="register_col75">
+                    <p><input type="text" th:field="*{surName}" placeholder="Last name" /></p>
+                </div>
 
-        <div class = "register_col25">
-            <label class="register_label" for="ssn">Ssn</label>
-        </div>
-        <div class="register_col75">
-            <p><input type="text" th:field="*{ssn}" placeholder="Ssn" /></p>
-        </div>
+                <div class = "register_col25">
+                    <label class="register_label" for="ssn">Ssn</label>
+                </div>
+                <div class="register_col75">
+                    <p><input type="text" th:field="*{ssn}" placeholder="Ssn" /></p>
+                </div>
 
-        <div class = "register_col25">
-            <label class="register_label" for="email">Email</label>
-        </div>
-        <div class="register_col75">
-            <p><input type="email" th:field="*{email}" placeholder="mail@domain.com" /></p>
-        </div>
+                <div class = "register_col25">
+                    <label class="register_label" for="email">Email</label>
+                </div>
+                <div class="register_col75">
+                    <p><input type="email" th:field="*{email}" placeholder="mail@domain.com" /></p>
+                </div>
 
-        <div class = "register_col25">
-            <label class="register_label" for="password">Password</label>
-        </div>
-        <div class="register_col75">
-            <p><input type="password" th:field="*{password}" placeholder="Password" /></p>
-        </div>
+                <div class = "register_col25">
+                    <label class="register_label" for="password">Password</label>
+                </div>
+                <div class="register_col75">
+                    <p><input type="password" th:field="*{password}" placeholder="Password" /></p>
+                </div>
 
-        <div class = "register_col25">
-            <label class="register_label" for="username" >Username</label>
-        </div>
-        <div class="register_col75">
-            <p><input type="text" th:field="*{userName}" placeholder="Username" /></p>
-        </div>
+                <div class = "register_col25">
+                    <label class="register_label" for="username" >Username</label>
+                </div>
+                <div class="register_col75">
+                    <p><input type="text" th:field="*{userName}" placeholder="Username" /></p>
+                </div>
+            </div>
+            <div class="register_row">
+                <input type="submit" value="Submit"  />
+            </div>
+        </form>
     </div>
-        <div class="register_row">
-            <input type="submit" value="Submit"  />
-        </div>
-    </form>
 </div>
 </body>
 </html>

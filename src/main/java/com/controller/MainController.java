@@ -4,10 +4,14 @@ import com.model.Person;
 import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 
 
@@ -30,12 +34,14 @@ public class MainController {
     p.setRoleId(2);
     p.setUserName(userName);
     try {
-        personRepository.save(p);
+      personRepository.save(p);
     } catch(Exception ex){
-        return "redirect:/error";
+      return "redirect:/error";
     }
-    return "redirect:/login";
+    //Change later to redirect to something good
+    return "redirect:/";
   }
+
 
   @GetMapping(path="/report1testresult")
   public String getAllPeople(Model model){
@@ -45,18 +51,20 @@ public class MainController {
   }
 
 
-    @GetMapping("/register")
-    public String personForm(Model model) {
-        model.addAttribute("person", new Person());
-        return "register";
-    }
+  @GetMapping("/register")
+  public String personForm(Model model) {
+    model.addAttribute("person", new Person());
+    return "register";
+  }
 
-    @PostMapping("/register")
-    public String personSubmit(@ModelAttribute Person person) {
-        return "login";
-    }
 
-  @RequestMapping("/")
+  @PostMapping("/register")
+  public String personSubmit(@ModelAttribute Person person) {
+    return "register";
+  }
+
+
+  @RequestMapping("/index")
   String index() {
     return "index";
   }
@@ -66,8 +74,31 @@ public class MainController {
     return "report1test";
   }
 
-  @GetMapping("/")
+  @RequestMapping("/")
+  public String homePage(){
+    return "index";
+  }
+
+  @RequestMapping("/login")
   public String userLogin(){
     return "login";
   }
+  @RequestMapping("/profile")
+  public String userProfile(){
+    return "profile";
+  }
+
+
+
+
+  @RequestMapping ("/logout-success")
+  public String userLogout(){
+    return "logout";
+  }
+
+  @RequestMapping("/lockedpage")
+  public String lockedPage(){
+    return "lockedpage";
+  }
+
 }

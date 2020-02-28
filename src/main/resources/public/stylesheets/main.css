@@ -26,8 +26,10 @@
       max-width: 100%; }
 
 /* footer */
-footer {
-  text-align: center;
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .register_container{
