@@ -27,8 +27,8 @@ public class MainController {
 
   @Autowired
   private PersonRepository personRepository;
-  //@Autowired
-  //private PersonValidator personValidator;
+  @Autowired
+  private PersonValidator personValidator;
 
   /*@PostMapping(path="/register/add")
   public String addNewPerson (@NotNull @RequestParam String name, String surName, String ssn,
@@ -53,12 +53,12 @@ public class MainController {
     public String addNewPerson(@Valid Person person, BindingResult result, SessionStatus status){
 
     // To Create own validate
-    // personValidator.validate(person,result);
+    personValidator.validate(person,result);
     if(result.hasErrors()){
       return "register";
     }else{
-      person.setRoleId(2);
-      personRepository.save(person);
+        person.setRoleId(2);
+        personRepository.save(person);
         status.setComplete();
         return "redirect:/success";
     }

@@ -59,7 +59,7 @@ public class Person {
 
     @NotNull
     @Size(min = 5, max = 45)
-    @Column(name="username")
+    @Column(name="username", unique = true)
     private String userName;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

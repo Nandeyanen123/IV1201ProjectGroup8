@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
-    Person findByUserName(String usrname);
-
+    Person findByUserName(String username);
+    Person findBySsn(String ssn);
+    Person findByEmail(String email);
 }

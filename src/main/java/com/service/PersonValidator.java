@@ -1,6 +1,8 @@
 package com.service;
 
 import com.model.Person;
+import com.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -12,27 +14,26 @@ import javax.persistence.criteria.CriteriaBuilder;
 @Component
 public class PersonValidator implements Validator {
 
+    @Autowired
+    PersonRepository personRepository;
     public boolean supports(Class clazz) {
         return Person.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"name","error.name", "Name field can not be empty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"sureName","error.sureName", "Surename field can not be empty");
-        Person p = (Person) target;
-        String username = p.getUserName();
-        int userLength = username.length();
-        String password = p.getPassword();
-        int  passLength = password.length();
+            Person p = (Person) target;
 
-        if(userLength < 4 || userLength > 8) {
-            errors.rejectValue("username", "username must be between 4 to 8");
-        }
-        else if(passLength < 5){
+            if(personRepository.findBySsn(p.getSsn()) != null)
+                errors.rejectValue("ssn" ,"ssn.is.already.taken");
 
-            errors.rejectValue("password", "password can not be less then 5");
+            if(personRepository.findByUserName(p.getUserName()) != null)
+                errors.rejectValue("userName" ,"username.is.already.taken");
 
-        }
+            /* Support for uniq email
+            if(personRepository.findByEmail(p.getEmail())){
+                errors.rejectValue("email" ,"email.is.already.taken");
+            }
+             */
     }
 }
