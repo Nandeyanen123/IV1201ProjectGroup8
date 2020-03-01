@@ -45,10 +45,18 @@ public class Role {
      */
     public void setName(String name) { this.name = name; }
 
+    /**
+     * Returns the set of person.
+     * @return Set This returns the set of the variable person
+     */
     public Set<Person> getPersonSet() {
         return personSet;
     }
 
+    /**
+     * Set a set with person variables
+     * @param personSet This is the only parameter to setPersonSet
+     */
     public void setPersonSet(Set<Person> personSet) {
         this.personSet = personSet;
     }

@@ -25,7 +25,10 @@ public class UserDetailsImp implements UserDetails {
         this.person = person;
     }
 
-
+    /**
+     * This returns what authorities the user will have depending on their role.
+     * @return Collection a list of users authorities.
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("Applicant"));
@@ -49,21 +52,37 @@ public class UserDetailsImp implements UserDetails {
         return person.getUserName();
     }
 
+    /**
+     * This method is used to check if the user account is expired
+     * @return boolean This returns true if the account is not expired.
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * This method is used to check if the user accunt is locked
+     * @return boolean This returns true if the account is not locked
+     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    /**
+     * This method is used to check if the credentials is expired
+     * @return boolean This returns true if the credentials is not expired
+     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    /**
+     * This method is used to check if it's enabled
+     * @return boolean This returns true if it is enabled
+     */
     @Override
     public boolean isEnabled() {
         return true;
