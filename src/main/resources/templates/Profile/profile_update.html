@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}">
+
+<body>
+
+<!--/*@thymesVar id="person" type="com.model.Person"*/-->
+<div>
+    <div class="container">
+        <h1>
+            Update your profile
+        </h1>
+            <div class="register_container">
+                <!--/*@thymesVar id="person" type="com.model.Person"*/-->
+                <form action="#" th:action="@{/profile/profile_update}" th:object="${person}" method="post">
+                    <input type="hidden" name="_method" value="put" />
+                    <div class = "register_row">
+                        <div class = "register_col25">
+                            <label class="register_label" for="name">First name</label>
+                        </div>
+                        <div class="register_col75">
+                            <p><input type="text" th:field="*{name}" placeholder="Your name"/></p>
+                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+
+                        <div class = "register_col25">
+                            <label class="register_label" for="surName">Last name</label>
+                        </div>
+                        <div class="register_col75">
+                            <p><input type="text" th:field="*{surName}" placeholder="Last name" /></p>
+                            <span th:if="${#fields.hasErrors('surName')}" th:errors="*{surName}"></span>
+                        </div>
+
+                        <div class = "register_col25">
+                            <label class="register_label" for="email">Email</label>
+                        </div>
+                        <div class="register_col75">
+                            <p><input type="email" th:field="*{email}" placeholder="mail@domain.com"/></p>
+                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                        </div>
+
+                        <div class = "register_col25">
+                            <label class="register_label" for="password">Password (leave empty for unchanged)</label>
+                        </div>
+                        <div class="register_col75">
+                            <p><input type="password" th:field="*{password}" placeholder="Password" /></p>
+                            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                        </div>
+                    </div>
+
+    <div class="register_row">
+        <input type="submit" value="Update"  />
+    </div>
+</form>
+</div>
+    </div>
+</div>
+</body>

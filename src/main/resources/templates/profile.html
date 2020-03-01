@@ -3,16 +3,20 @@
 
 <body>
 
-<div class="jumbotron text-center">
+<!--/*@thymesVar id="person" type="com.model.Person"*/-->
+<div>
     <div class="container">
-        <a href="/" class="lang-logo">
-            <img src="/lang-logo.png">
-        </a>
-        <h1>Welcome User</h1>
+        <h1>
+            Welcome <th:block th:text="*{person.getName()}"}></th:block>
+        </h1>
+        <p>
+
+        </p>
         </br>
         <a href="/logout">Click to Logout</a>
-        <a type="button" class="btn btn-lg btn-default" href="/login"><span class="glyphicon glyphicon-flash"></span> Press to login </a>
-        <a type="button" class="btn btn-lg btn-primary" href="https://github.com/Nandeyanen123/IV1201ProjectGroup8"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
+        <a href="/profile/profile_update">Update profile</a>
+        <a href="/profile/addCompetence">Update competence</a>
+        länk till ansökan
     </div>
 </div>
 </body>

@@ -22,6 +22,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthenticationProvider authProvider;
 
+    final String RECRUITER = "recruiter";
+    final String APPLICANT = "applicant";
 /*
     @Bean
     public AuthenticationProvider authProvider()
@@ -41,6 +43,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                  .antMatchers("maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css").permitAll()
                  .antMatchers("/lockedpage","/profile").hasAuthority("applicant")
+                 .antMatchers("/profile/**").hasAuthority(APPLICANT)
                  .anyRequest().authenticated()
                  .and()
                  .formLogin()
