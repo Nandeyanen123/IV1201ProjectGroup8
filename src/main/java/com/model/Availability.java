@@ -17,7 +17,7 @@ public class Availability {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", insertable = false, updatable = false)
-    private Integer personId;
+    private Person person;
 
     @Column(name = "from_date")
     private Date fromDate;

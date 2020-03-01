@@ -18,11 +18,11 @@ public class Competence_Profile {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", insertable = false, updatable = false)
-    private Integer personId;
+    private Person person;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competence_id", insertable = false, updatable = false)
-    private Integer competenceId;
+    private Competence competence;
 
     @Column(name="years_of_experience")
     private Integer years;

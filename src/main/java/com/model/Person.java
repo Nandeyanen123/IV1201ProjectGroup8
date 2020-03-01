@@ -42,8 +42,8 @@ public class Person {
     @JoinColumn(name="role_id",  nullable = false, insertable = false, updatable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Applikation> applikationSet;
+    @OneToOne(mappedBy = "person", fetch = FetchType.LAZY)
+    private Applikation applikation;
 
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Availability> availabilitySet;
