@@ -8,6 +8,7 @@ import com.repository.CompetenceProfileRepository;
 import com.repository.CompetenceRepository;
 import com.repository.PersonRepository;
 import com.service.UpdatePersonValidator;
+import com.service.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import com.service.PersonValidator;
 import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -31,6 +35,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping(path="/")
+@SessionAttributes("person")
 public class MainController {
 
   @Autowired
@@ -52,7 +57,7 @@ public class MainController {
    * @param userName This is sixth first parameter of the addNewPerson method
    * @return String This returns the new person
    */
-  @PostMapping(path="/register/add")
+  /*@PostMapping(path="/register/add")
   public String addNewPerson (@NotNull @RequestParam String name, String surName, String ssn,
                               String email, String password, String userName){
     Person p = new Person();
@@ -70,6 +75,20 @@ public class MainController {
     }
     //Change later to redirect to something good
     return "redirect:/";
+  }*/
+  @RequestMapping(path = "/register/add", method = RequestMethod.POST)
+    public String addNewPerson(@Valid Person person, BindingResult result, SessionStatus status){
+
+    // To Create own validate
+    personValidator.validate(person,result);
+    if(result.hasErrors()){
+      return "register";
+    }else{
+        person.setRoleId(2);
+        personRepository.save(person);
+        status.setComplete();
+        return "redirect:/success";
+    }
   }
 
   /**
@@ -77,6 +96,12 @@ public class MainController {
    * @param model This is the only parameter of the getAllPeople method.
    * @return String this returns report1testresult
    */
+  @RequestMapping(value = "/success", method = RequestMethod.GET)
+  public String success(Model model)
+  {
+    return "addSuccess";
+  }
+
   @GetMapping(path="/report1testresult")
   public String getAllPeople(Model model){
       Iterable<Person> people = personRepository.findAll();
