@@ -1,5 +1,6 @@
 package com.repository;
 
+import com.model.Competence;
 import com.model.Person;
 import com.model.Role;
 import org.springframework.data.domain.Example;
@@ -11,16 +12,15 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * This is the repository class for Person.
+ * This is the repository class for Competence.
  * It extends JpaRepository
  */
 @Repository
-public interface PersonRepository extends JpaRepository<Person, Integer> {
-    Person findByUserName(String username);
-    Person findBySsn(String ssn);
-    Person findByEmail(String email);
+public interface CompetenceRepository extends JpaRepository<Competence, Integer> {
+    Competence findByCompetenceName(String competenceName);
 }

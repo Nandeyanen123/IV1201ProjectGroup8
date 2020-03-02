@@ -1,6 +1,11 @@
 package com.controller;
 
+import com.DAO.competenceProfileCompetenceYearDAO;
+import com.model.Competence;
+import com.model.Competence_Profile;
 import com.model.Person;
+import com.repository.CompetenceProfileRepository;
+import com.repository.CompetenceRepository;
 import com.repository.PersonRepository;
 import com.service.UpdatePersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +19,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.service.PersonValidator;
 import org.springframework.web.bind.support.SessionStatus;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * This is the MainController class.
@@ -32,6 +37,10 @@ public class MainController {
   private PersonRepository personRepository;
   @Autowired
   private PersonValidator personValidator;
+  @Autowired
+  private CompetenceRepository competenceRepository;
+  @Autowired
+  private CompetenceProfileRepository competenceProfileRepository;
 
   /**
    * This method adds a new person and returns a String that is used to redirect.
@@ -184,6 +193,72 @@ public class MainController {
   @RequestMapping("/lockedpage")
   public String lockedPage(){
     return "lockedpage";
+  }
+
+  @RequestMapping(value = "/profile/profile_competence", method = RequestMethod.GET)
+  public String profileCompetence(Model model, HttpServletRequest httpServletRequest) {
+    String username = httpServletRequest.getUserPrincipal().getName();
+    Person person = personRepository.findByUserName(username);
+
+    Iterable<Competence_Profile> competence_Profile = competenceProfileRepository.findAllByPersonId(person.getId());
+    Iterable<Competence> competence = competenceRepository.findAll();
+
+    competenceProfileCompetenceYearDAO test = new competenceProfileCompetenceYearDAO();
+    Map<String, Integer> map = test.getCompetenceNameAndYear(person.getId(),competence_Profile, competence);
+
+    model.addAttribute("competence" , competence);
+    model.addAttribute("map" , map);
+    return "/profile/profile_competence";
+  }
+
+  @RequestMapping(value = "/profile/profile_competence/delete/{componentName}")
+  public String profile_competence_delete(HttpServletRequest httpServletRequest, @PathVariable String componentName){
+    String username = httpServletRequest.getUserPrincipal().getName();
+    Person p = personRepository.findByUserName(username);
+    Competence competence = competenceRepository.findByCompetenceName(componentName);
+    Competence_Profile profile = competenceProfileRepository.findByPersonAndCompetence(p, competence);
+    competenceProfileRepository.delete(profile);
+      return "redirect:/";
+  }
+/*
+  @RequestMapping(value = "/profile/profile_competence/add/{componentName}/{year}")
+  public String profile_competence_add(HttpServletRequest httpServletRequest, @PathVariable("componentName") String componentName, @PathVariable("year") String year){
+    String username = httpServletRequest.getUserPrincipal().getName();
+    Person p = personRepository.findByUserName(username);
+
+    System.out.println(p.getId());
+    Competence competence = competenceRepository.findByCompetenceName(componentName);
+    int yearInt = Integer.parseInt(year);
+
+    Competence_Profile asd = competenceProfileRepository.findByPersonAndCompetence(p,competence);
+
+    if(asd == null) {
+      Competence_Profile newProfile = new Competence_Profile(p, competence, yearInt);
+      competenceProfileRepository.save(newProfile);
+    }
+    //Competence_Profile profile = competenceProfileRepository.findByPersonAndCompetence(p, competence);
+    //competenceProfileRepository.delete(profile);
+    return "redirect:/";
+  }
+*/
+
+
+  @RequestMapping(value = "/profile/profile_competence/add", method = RequestMethod.POST)
+  public String profile_competence_add(HttpServletRequest httpServletRequest, Competence competence){
+    String username = httpServletRequest.getUserPrincipal().getName();
+    Person p = personRepository.findByUserName(username);
+
+    String year = httpServletRequest.getParameter("year");
+    int yearInt = Integer.parseInt(year);
+
+    Competence_Profile asd = competenceProfileRepository.findByPersonAndCompetence(p,competence);
+
+    if(asd == null) {
+      Competence_Profile newProfile = new Competence_Profile(p, competence, yearInt);
+      competenceProfileRepository.save(newProfile);
+    }
+
+    return "redirect:/";
   }
 
 }

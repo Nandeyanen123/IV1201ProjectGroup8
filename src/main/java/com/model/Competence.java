@@ -12,12 +12,28 @@ import java.util.List;
 public class Competence {
     @Id
     @Column(name="competence_id")
-    private Integer competenceId;
+    private int competenceId;
 
     @Column(name="name")
     private String competenceName;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Competence_Profile> competence_profiles= new ArrayList<>();
+
+    public Integer getCompetenceId() {
+        return competenceId;
+    }
+
+    public void setCompetenceId(Integer competenceId) {
+        this.competenceId = competenceId;
+    }
+
+    public String getCompetenceName() {
+        return competenceName;
+    }
+
+    public void setCompetenceName(String competenceName) {
+        this.competenceName = competenceName;
+    }
 
 }
