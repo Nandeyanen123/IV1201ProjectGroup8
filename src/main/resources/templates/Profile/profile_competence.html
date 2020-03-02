@@ -33,7 +33,10 @@
             </select>
         </div>
 
-        <p><input type="text" name="year" /></p>
+        <p>
+            <th:block th:text="#{profile_profile_competence.yearsOfExp}"></th:block>
+            <input type="text" name="year" />
+        </p>
         <input type="submit" value="post"/>
     </form>
 

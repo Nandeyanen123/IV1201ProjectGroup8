@@ -1,9 +1,12 @@
 package com.service;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.model.Person;
+import com.model.Role;
 import com.repository.PersonRepository;
+import com.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,14 +28,18 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    RoleRepository roleRepository;
+
+    private final String APPLICANT = "applicant";
+    private final String RECRUITER = "recruiter";
+
     /**
      * The constructor of the class.
      */
     public CustomAuthenticationProvider() {
         super();
     }
-
-    // API
 
     /**
      * This method returns authentication a user has. It first looks to see if the user exists in the database and
@@ -49,38 +56,24 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         final String password = authentication.getCredentials().toString();
 
         Person person = personRepository.findByUserName(name);
+        int roleId = person.getRoleId();
+        final List<GrantedAuthority> grantedAuths = new ArrayList<>();
+
         if(person==null)
             throw new UsernameNotFoundException("Login error");
 
         if (person.getUserName().equals(name) && password.equals(person.getPassword())) {
-
-            //# TODO Fix list with all roles
-
-            final List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            grantedAuths.add(new SimpleGrantedAuthority("applicant"));
-
+            addAllRolesFromDB(grantedAuths, roleId);
+            for(int i = 0; i < grantedAuths.size(); i++){
+                System.out.println(grantedAuths.get(i).toString());
+            }
             final UserDetails principal = new User(name, password, grantedAuths);
-
             final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
 
             return auth;
         }
         else
             throw new UsernameNotFoundException("Login error");
-
-        //  return new UserDetailsImp(person);
-
-        /*if (name.equals("admin") && password.equals("system")) {
-            final List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            grantedAuths.add(new SimpleGrantedAuthority("applicant"));
-            final UserDetails principal = new User(name, password, grantedAuths);
-            final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
-            return auth;
-        } else {
-            return null;
-        }
-
-         */
     }
 
     /**
@@ -91,6 +84,21 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public boolean supports(final Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+
+    /**
+     * Helper method that adds right roles to and GrantedAuthority
+     * @param grantedAuths all granted auths
+     * @param personRoleId role id of person that wants auth
+     */
+    private void addAllRolesFromDB(List<GrantedAuthority> grantedAuths, int personRoleId){
+        Iterable rolesIterable = roleRepository.findAll();
+        Iterator roles = rolesIterable.iterator();
+        while(roles.hasNext()){
+            Role role = (Role) roles.next();
+            if(role.getRole_id() == personRoleId)
+                grantedAuths.add(new SimpleGrantedAuthority(role.getName()));
+        }
     }
 
 }
