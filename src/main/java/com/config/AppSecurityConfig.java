@@ -54,6 +54,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                  .antMatchers("maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css").permitAll()
                  .antMatchers("/lockedpage","/profile").hasAuthority("applicant")
                  .antMatchers("/profile/**").hasAuthority(APPLICANT)
+                 .antMatchers("/application").hasAnyAuthority()
                  .anyRequest().authenticated()
                  .and()
                  .formLogin()
