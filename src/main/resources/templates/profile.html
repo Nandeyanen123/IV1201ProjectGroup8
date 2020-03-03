@@ -10,13 +10,27 @@
             Welcome <th:block th:text="*{person.getName()}"}></th:block>
         </h1>
         <p>
+            </br>
+            <a href="/logout">
+                <th:block th:text="#{profile.logout}"/>
+            </a>
+            </br>
 
+            <a href="/profile/profile_update">
+                <th:block th:text="#{profile.updateProfile}"/>
+            </a>
+            </br>
+
+            <a href="/profile/profile_competence">
+                <th:block th:text="#{profile.updateCompetence}"/>
+            </a>
+            </br>
+
+            <a href="/Application/">
+                <th:block th:text="#{profile.application}"/>
+            </a>
+            </br>
         </p>
-        </br>
-        <a href="/logout">Click to Logout</a>
-        <a href="/profile/profile_update">Update profile</a>
-        <a href="/profile/profile_competence">Update competence</a>
-        länk till ansökan
     </div>
 </div>
 </body>
