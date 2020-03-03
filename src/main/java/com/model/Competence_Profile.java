@@ -36,22 +36,42 @@ public class Competence_Profile {
         this.years = yearInt;
     }
 
+    /**
+     * This is used to get the competence profile id
+     * @return Integer returns the competence profile id
+     */
     public Integer getCompetence_profileId() {
         return competence_profileId;
     }
 
+    /**
+     * This is used to get the competence profile person
+     * @return Integer returns the person
+     */
     public Person getPerson() {
         return person;
     }
 
+    /**
+     * This is used to get the competence profile competence
+     * @return Integer returns the competence
+     */
     public Competence getCompetence() {
         return competence;
     }
 
+    /**
+     * This is used to get the competence profile years
+     * @return Integer returns the years
+     */
     public Integer getYears() {
         return years;
     }
 
+    /**
+     * This method is used to set years in the column
+     * @param years This is the only parameter for the method
+     */
     public void setYears(Integer years) {
         this.years = years;
     }

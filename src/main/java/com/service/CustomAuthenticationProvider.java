@@ -55,6 +55,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (person.getUserName().equals(name) && password.equals(person.getPassword())) {
 
             //# TODO Fix list with all roles
+            //final String role = person.getRole().getName();
 
             final List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("applicant"));
