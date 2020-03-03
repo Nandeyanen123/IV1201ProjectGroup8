@@ -14,6 +14,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,7 +47,8 @@ public class MainController {
   private CompetenceRepository competenceRepository;
   @Autowired
   private CompetenceProfileRepository competenceProfileRepository;
-
+  @Autowired
+  private PasswordEncoder passwordEncoder;
   /**
    * This method adds a new person and returns a String that is used to redirect.
    * @param person person that should be added
@@ -62,6 +64,8 @@ public class MainController {
     if(result.hasErrors()){
       return "register";
     }else{
+        String encodedPassword = passwordEncoder.encode(person.getPassword());
+        person.setPassword(encodedPassword);
         person.setRoleId(2);
         personRepository.save(person);
         status.setComplete();
@@ -166,7 +170,7 @@ public class MainController {
     Person personFromDatabase = personRepository.findByUserName(username);
     UpdatePersonValidator updatePersonValidator = new UpdatePersonValidator();
 
-    updatePersonValidator.validate(personFromDatabase, personFromFrom ,result);
+    updatePersonValidator.validate(personFromDatabase, personFromFrom , passwordEncoder,result);
 
     if(result.hasErrors())
       return "profile/profile_update";

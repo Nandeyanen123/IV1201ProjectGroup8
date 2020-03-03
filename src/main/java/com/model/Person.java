@@ -54,7 +54,7 @@ public class Person {
     private String email;
 
     @NotNull
-    @Size(min = 5, max = 45)
+    @Size(min = 10, max = 70, message="Password needs to be at least 10 characters long")
     @Column(name="password")
     private String password;
 

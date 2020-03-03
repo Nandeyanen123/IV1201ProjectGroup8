@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
@@ -30,6 +31,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     private final String APPLICANT = "applicant";
     private final String RECRUITER = "recruiter";
@@ -58,14 +62,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         final List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
+        String encodedPassword=passwordEncoder.encode(password);
         try{
             Person person = personRepository.findByUserName(name);
             int roleId = person.getRoleId();
 
-            if (person.getUserName().equals(name) && password.equals(person.getPassword())) {
+            if (person.getUserName().equals(name) && passwordEncoder.matches(password,person.getPassword())) {
                 addAllRolesFromDB(grantedAuths, roleId);
-                final UserDetails principal = new User(name, password, grantedAuths);
-                auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
+                final UserDetails principal = new User(name, encodedPassword, grantedAuths);
+                auth = new UsernamePasswordAuthenticationToken(principal, encodedPassword, grantedAuths);
                 return auth;
             }
         }
