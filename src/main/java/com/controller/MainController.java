@@ -253,10 +253,9 @@ public class MainController {
 
     String year = httpServletRequest.getParameter("year");
     int yearInt = Integer.parseInt(year);
+    Competence_Profile checkForDuplicateCompetence = competenceProfileRepository.findByPersonAndCompetence(p,competence);
 
-    Competence_Profile asd = competenceProfileRepository.findByPersonAndCompetence(p,competence);
-
-    if(asd == null) {
+    if(checkForDuplicateCompetence == null) {
       Competence_Profile newProfile = new Competence_Profile(p, competence, yearInt);
       competenceProfileRepository.save(newProfile);
     }

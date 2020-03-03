@@ -59,7 +59,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                  .anyRequest().authenticated()
                  .and()
                  .formLogin()
-                 .loginPage("/login").permitAll().defaultSuccessUrl("/profile")
+                 .loginPage("/login").permitAll().defaultSuccessUrl("/profile").failureForwardUrl("/login?error")
                 .and().logout().invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

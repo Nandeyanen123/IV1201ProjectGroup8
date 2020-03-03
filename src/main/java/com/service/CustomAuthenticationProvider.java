@@ -54,27 +54,38 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
         final String name = authentication.getName();
         final String password = authentication.getCredentials().toString();
+        final Authentication auth;
 
-        Person person = personRepository.findByUserName(name);
-        int roleId = person.getRoleId();
         final List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
-        if(person==null)
+        try{
+            Person person = personRepository.findByUserName(name);
+            int roleId = person.getRoleId();
+
+            if (person.getUserName().equals(name) && password.equals(person.getPassword())) {
+                addAllRolesFromDB(grantedAuths, roleId);
+                final UserDetails principal = new User(name, password, grantedAuths);
+                auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
+                return auth;
+            }
+        }
+        catch(NullPointerException e){
+            System.out.println(e.toString() + " in CustomAuthenticationProvider");
+            throw new UsernameNotFoundException("Login error");
+        }
+
+        return null;
+        /*
+        if(person==null || person.getRoleId() == null)
             throw new UsernameNotFoundException("Login error");
 
-        if (person.getUserName().equals(name) && password.equals(person.getPassword())) {
-            addAllRolesFromDB(grantedAuths, roleId);
-            for(int i = 0; i < grantedAuths.size(); i++){
-                System.out.println(grantedAuths.get(i).toString());
-            }
-            final UserDetails principal = new User(name, password, grantedAuths);
-            final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
 
-            return auth;
         }
         else
-            throw new UsernameNotFoundException("Login error");
+            throw new UsernameNotFoundException("Login error");  */
     }
+
+
 
     /**
      * This method checks if the authentication is equal to the authentication the user has.
