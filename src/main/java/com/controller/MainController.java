@@ -49,33 +49,11 @@ public class MainController {
 
   /**
    * This method adds a new person and returns a String that is used to redirect.
-   * @param name This is the first parameter of the addNewPerson method
-   * @param surName This is the second parameter of the addNewPerson method
-   * @param ssn This is the third parameter of the addNewPerson method
-   * @param email This is the fourth parameter of the addNewPerson method
-   * @param password This is fifth first parameter of the addNewPerson method
-   * @param userName This is sixth first parameter of the addNewPerson method
-   * @return String This returns the new person
+   * @param person person that should be added
+   * @param result contains error handling
+   * @param status
+   * @return
    */
-  /*@PostMapping(path="/register/add")
-  public String addNewPerson (@NotNull @RequestParam String name, String surName, String ssn,
-                              String email, String password, String userName){
-    Person p = new Person();
-    p.setName(name);
-    p.setSurName(surName);
-    p.setSsn(ssn);
-    p.setEmail(email);
-    p.setPassword(password);
-    p.setRoleId(2);
-    p.setUserName(userName);
-    try {
-      personRepository.save(p);
-    } catch(Exception ex){
-      return "redirect:/error";
-    }
-    //Change later to redirect to something good
-    return "redirect:/";
-  }*/
   @RequestMapping(path = "/register/add", method = RequestMethod.POST)
     public String addNewPerson(@Valid Person person, BindingResult result, SessionStatus status){
 
@@ -243,7 +221,7 @@ public class MainController {
     Competence competence = competenceRepository.findByCompetenceName(componentName);
     Competence_Profile profile = competenceProfileRepository.findByPersonAndCompetence(p, competence);
     competenceProfileRepository.delete(profile);
-      return "redirect:/";
+      return "redirect:/profile/profile_competence";
   }
 /*
   @RequestMapping(value = "/profile/profile_competence/add/{componentName}/{year}")
@@ -275,15 +253,15 @@ public class MainController {
 
     String year = httpServletRequest.getParameter("year");
     int yearInt = Integer.parseInt(year);
+    Competence_Profile checkForDuplicateCompetence = competenceProfileRepository.findByPersonAndCompetence(p,competence);
 
-    Competence_Profile asd = competenceProfileRepository.findByPersonAndCompetence(p,competence);
-
-    if(asd == null) {
+    if(checkForDuplicateCompetence == null) {
       Competence_Profile newProfile = new Competence_Profile(p, competence, yearInt);
       competenceProfileRepository.save(newProfile);
     }
 
-    return "redirect:/";
+    return "redirect:/profile/profile_competence";
   }
+
 
 }

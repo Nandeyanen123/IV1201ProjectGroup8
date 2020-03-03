@@ -108,7 +108,7 @@ public class UpdatePersonValidator implements Validator {
      * @param errors This is the first parameter of the method validatePasword
      */
     private void validatePasword(Person personFromDatabase, String newPassword, Errors errors) {
-        if(newPassword == null)
+        if(newPassword == null || newPassword.isEmpty())
             return;
 
         if(newPassword.length() > 4 && newPassword.length() < 45 )
