@@ -17,7 +17,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{name}" placeholder="Your name"/></p>
-                     <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                    <font color="red" ><span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/></font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -25,7 +25,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{surName}" placeholder="Last name" /></p>
-                    <span th:if="${#fields.hasErrors('surName')}" th:errors="*{surName}"></span>
+                    <font color="red" ><span th:if="${#fields.hasErrors('surName')}" th:errors="*{surName}"/></font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{ssn}" placeholder="Ssn" /></p>
-                    <span th:if="${#fields.hasErrors('ssn')}" th:errors="*{ssn}"></span>
+                    <font color="red" ><font th:if="${#fields.hasErrors('ssn')}" th:errors="*{ssn}"/> </font>/span>
                 </div>
 
                 <div class = "register_col25">
@@ -41,7 +41,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="email" th:field="*{email}" placeholder="mail@domain.com"/></p>
-                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                    <font color="red" ><span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" /> </font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -49,7 +49,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="password" th:field="*{password}" placeholder="Password" /></p>
-                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                    <font color="red" ><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/></font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -57,7 +57,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{userName}" placeholder="Username" /></p>
-                    <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+                    <font color="red" ><font th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"/> ></font></span>
                 </div>
             </div>
             <div class="register_row">
