@@ -58,7 +58,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         final List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
-            //# TODO Fix list with all roles
         try{
             Person person = personRepository.findByUserName(name);
             int roleId = person.getRoleId();
