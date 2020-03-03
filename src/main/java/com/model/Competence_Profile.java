@@ -28,8 +28,12 @@ public class Competence_Profile {
     @Column(name="years_of_experience")
     private Integer years;
 
-    public Competence_Profile(){}
-
+    /**
+     * This is the constructor of the class Competence Profile. It sets new values to person, competence and years.
+     * @param p This is the first parameter of the constructor Competence_Profile
+     * @param competence This is the second parameter of the constructor Competence_Profile
+     * @param yearInt This is the third parameter of the constructor Competence_Profile
+     */
     public Competence_Profile(Person p, Competence competence, int yearInt) {
         this.person = p;
         this.competence = competence;
