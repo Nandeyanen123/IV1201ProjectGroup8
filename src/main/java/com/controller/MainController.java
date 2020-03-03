@@ -73,7 +73,8 @@ public class MainController {
         person.setRoleId(2);
         personRepository.save(person);
         status.setComplete();
-        return "redirect:/success";
+        //model.addAttribute("addsuccess","Added Successfully");
+        return "redirect:/login?success";
     }
   }
 
@@ -82,11 +83,12 @@ public class MainController {
    * @param model This is the only parameter of the getAllPeople method.
    * @return String this returns report1testresult
    */
-  @RequestMapping(value = "/success", method = RequestMethod.GET)
-  public String success(Model model)
+  /*@RequestMapping(value = "success/{addsuccess}", method = RequestMethod.GET)
+  public String success(@PathVariable("addsuccess") String addsuccess, Model model)
   {
-    return "addSuccess";
-  }
+    model.addAttribute("addsuccess",addsuccess);
+    return "redirect:/login?success";
+  }*/
 
   @GetMapping(path="/report1testresult")
   public String getAllPeople(Model model){
