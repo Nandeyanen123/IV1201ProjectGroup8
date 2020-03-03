@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ * This class is called competenceProfileCompetenceYearDAO
+ */
 @Component
 public class competenceProfileCompetenceYearDAO {
     @Autowired
@@ -17,7 +20,18 @@ public class competenceProfileCompetenceYearDAO {
     @Autowired
     CompetenceProfileRepository competenceProfileRepository;
 
+    /**
+     * This is the constructor of the class
+     */
     public competenceProfileCompetenceYearDAO(){ }
+
+    /**
+     * This is used to get the competence name and year.
+     * @param id This is the first parameter of the method
+     * @param competence_Profile This is the second parameter of the method
+     * @param competence This is the third parameter of the method
+     * @return Map This returns a map with a string and integer values
+     */
     public Map<String,Integer> getCompetenceNameAndYear(int id, Iterable<Competence_Profile> competence_Profile, Iterable<Competence> competence){
         Map<String,Integer> myMap = new HashMap<String,Integer>();
         Iterator<Competence_Profile> competenceProfileIterator = competence_Profile.iterator();

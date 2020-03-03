@@ -3,6 +3,7 @@ package com.service;
 import com.model.Person;
 import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -40,10 +41,10 @@ public class UpdatePersonValidator implements Validator {
      * @param personWithNewData This is the second parameter of the method validate
      * @param errors This is the third parameter of the method validate
      */
-    public void validate(Person personFromDatabase, Person personWithNewData, Errors errors){
+    public void validate(Person personFromDatabase, Person personWithNewData, PasswordEncoder passwordEncoder, Errors errors){
         validateName(personFromDatabase, personWithNewData.getName(), errors);
         validateSurName(personFromDatabase, personWithNewData.getSurName(), errors);
-        validatePassword(personFromDatabase, personWithNewData.getPassword(), errors);
+        validatePassword(personFromDatabase, personWithNewData.getPassword(), passwordEncoder, errors);
         validateEmail(personFromDatabase, personWithNewData.getEmail(), errors);
     }
 
@@ -107,13 +108,15 @@ public class UpdatePersonValidator implements Validator {
      * @param newPassword This is the first parameter of the method validatePasword
      * @param errors This is the first parameter of the method validatePasword
      */
-    private void validatePassword(Person personFromDatabase, String newPassword, Errors errors) {
+    private void validatePassword(Person personFromDatabase, String newPassword, PasswordEncoder passwordEncoder, Errors errors) {
+        String encodedPassword=passwordEncoder.encode(newPassword);
         if(newPassword == null || newPassword.isEmpty())
             return;
 
-        if(newPassword.length() > 4 && newPassword.length() < 45 )
-            personFromDatabase.setPassword(newPassword);
-        else if(newPassword.length() < 4 || newPassword.length() > 45)
+        if(newPassword.length() > 10 && newPassword.length() < 70 ) {
+            personFromDatabase.setPassword(encodedPassword);
+        }
+        else if(newPassword.length() < 10 || newPassword.length() > 70)
             errors.rejectValue("password" , "password.is.bad.size");
     }
 }

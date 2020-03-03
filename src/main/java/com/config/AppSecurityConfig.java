@@ -3,12 +3,15 @@ package com.config;
 import com.service.CustomAuthenticationProvider;
 import com.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -39,6 +42,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 */
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     /**
      * This method is used to configure the settings of the HttpSecurity parameter.
      * @param http This is the only parameter of the configure method
@@ -46,8 +54,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-         http.csrf()
-                 .disable()
+         http
                  .authorizeRequests()
                  .antMatchers("/", "/register/**", "/error", "/login*", "/stylesheets/**", "/lang-logo.png")
                     .permitAll()
