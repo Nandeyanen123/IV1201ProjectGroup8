@@ -43,7 +43,7 @@ public class UpdatePersonValidator implements Validator {
     public void validate(Person personFromDatabase, Person personWithNewData, Errors errors){
         validateName(personFromDatabase, personWithNewData.getName(), errors);
         validateSurName(personFromDatabase, personWithNewData.getSurName(), errors);
-        validatePasword(personFromDatabase, personWithNewData.getPassword(), errors);
+        validatePassword(personFromDatabase, personWithNewData.getPassword(), errors);
         validateEmail(personFromDatabase, personWithNewData.getEmail(), errors);
     }
 
@@ -107,7 +107,7 @@ public class UpdatePersonValidator implements Validator {
      * @param newPassword This is the first parameter of the method validatePasword
      * @param errors This is the first parameter of the method validatePasword
      */
-    private void validatePasword(Person personFromDatabase, String newPassword, Errors errors) {
+    private void validatePassword(Person personFromDatabase, String newPassword, Errors errors) {
         if(newPassword == null || newPassword.isEmpty())
             return;
 
