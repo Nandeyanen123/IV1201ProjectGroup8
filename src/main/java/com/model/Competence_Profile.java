@@ -29,6 +29,10 @@ public class Competence_Profile {
     private Integer years;
 
     /**
+     * Do not remove!
+     */
+    public Competence_Profile(){}
+    /**
      * This is the constructor of the class Competence Profile. It sets new values to person, competence and years.
      * @param p This is the first parameter of the constructor Competence_Profile
      * @param competence This is the second parameter of the constructor Competence_Profile
