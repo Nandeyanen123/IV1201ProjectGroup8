@@ -32,7 +32,7 @@ import java.util.*;
 
 /**
  * This is the MainController class.
- * It controls the addition of a person and the changing of a web page.
+ * It controls the addition of a person and the changes of a web page.
  */
 @Controller
 @RequestMapping(path="/")
@@ -180,7 +180,12 @@ public class MainController {
     return "profile";
   }
 
-
+  /**
+   * This method is used to get the update profile of a person(user)
+   * @param model This is the first parameter of the method profileUpdate2
+   * @param httpServletRequest This is the second parameter of the method profileUpdate2
+   * @return String This returns the updated profile.
+   */
   @RequestMapping(value = "/profile/profile_update", method = RequestMethod.GET)
   public String profileUpdate2(Model model, HttpServletRequest httpServletRequest){
     Person person = personRepository.findByUserName(httpServletRequest.getUserPrincipal().getName());
@@ -188,6 +193,10 @@ public class MainController {
     return "profile/profile_update";
   }
 
+  /**
+   * This method is used for logout
+   * @return String returns to logout
+   */
   @RequestMapping ("/logout-success")
   public String userLogout(){
     return "logout";
@@ -202,6 +211,12 @@ public class MainController {
     return "lockedpage";
   }
 
+  /**
+   * The method is used to get a person(user) competence profile
+   * @param model This is the first parameter of the method profileCompetence
+   * @param httpServletRequest This is the first parameter of the method profileCompetence
+   * @return String This returns the competence profile.
+   */
   @RequestMapping(value = "/profile/profile_competence", method = RequestMethod.GET)
   public String profileCompetence(Model model, HttpServletRequest httpServletRequest) {
     String username = httpServletRequest.getUserPrincipal().getName();
@@ -218,6 +233,12 @@ public class MainController {
     return "/profile/profile_competence";
   }
 
+  /**
+   * This method is used when a person(user) deletes a competence
+   * @param httpServletRequest This is the first parameter of the method profile_competence_delete
+   * @param componentName This is the second parameter of the method profile_competence_delete
+   * @return String This returns the competence profile
+   */
   @RequestMapping(value = "/profile/profile_competence/delete/{componentName}")
   public String profile_competence_delete(HttpServletRequest httpServletRequest, @PathVariable String componentName){
     String username = httpServletRequest.getUserPrincipal().getName();
@@ -249,7 +270,12 @@ public class MainController {
   }
 */
 
-
+  /**
+   * This method is used when the person(user) wants to add a competence to their profile
+   * @param httpServletRequest This is the first parameter of the method profile_competence_add
+   * @param competence This is the first parameter of the method profile_competence_add
+   * @return String This returns the competence profile
+   */
   @RequestMapping(value = "/profile/profile_competence/add", method = RequestMethod.POST)
   public String profile_competence_add(HttpServletRequest httpServletRequest, Competence competence){
     String username = httpServletRequest.getUserPrincipal().getName();
