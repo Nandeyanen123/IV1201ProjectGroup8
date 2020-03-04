@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * This class implements UserDetailsService.
  * It is used to customize on what user details the program will load
@@ -27,6 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException This method throws UsernameNotFoundException
      */
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Person person = personRepository.findByUserName(username);
