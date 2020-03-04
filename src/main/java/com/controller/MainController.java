@@ -1,9 +1,11 @@
 package com.controller;
 
 import com.DAO.competenceProfileCompetenceYearDAO;
+import com.model.Applikation;
 import com.model.Competence;
 import com.model.Competence_Profile;
 import com.model.Person;
+import com.repository.ApplikationRepository;
 import com.repository.CompetenceProfileRepository;
 import com.repository.CompetenceRepository;
 import com.repository.PersonRepository;
@@ -49,6 +51,8 @@ public class MainController {
   private CompetenceProfileRepository competenceProfileRepository;
   @Autowired
   private PasswordEncoder passwordEncoder;
+  @Autowired
+  private ApplikationRepository applikationRepository;
   /**
    * This method adds a new person and returns a String that is used to redirect.
    * @param person person that should be added
@@ -295,6 +299,19 @@ public class MainController {
     }
 
     return "redirect:/profile/profile_competence";
+  }
+
+  @RequestMapping(value = "/application/application", method = RequestMethod.GET)
+  public String application(HttpServletRequest httpServletRequest, Model model){
+
+    String username = httpServletRequest.getUserPrincipal().getName();
+    Person person = personRepository.findByUserName(username);
+
+    Applikation applikation = applikationRepository.findByPerson(person);
+
+    model.addAttribute("applikation" , applikation);
+
+    return "/application/application";
   }
 
 

@@ -1,6 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}">
-
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application</title>
+</head>
 <body>
+<div class="register_container">
+    <h2>Add application</h2>
+</div>
 
+
+<table class = "table table-striped">
+    <tr th:each="Applikation: ${applikation}">
+    <!--/*@thymesVar id="applikation" type="com.model.Applikation"*/-->
+    <td th:text="#{application.sendIn} + ' ' + ${applikation.getApplikation_date()}"/>
+        <!--/*@thymesVar id="applikation" type="com.model.Status"*/-->
+        <!-- <td th:text="${applikation.getStatus}"/> -->
+    </tr>
+</table>
+
+<div class="register_container">
+    <!--/*@thymesVar id="availability" type="com.model.Availability"*/-->
+    <form action="#" th:action="@{/application/add}" th:object="${availability}" method="post" novalidate>
+        <th:block th:text="#{application.formHeader}"/>
+        <div class = "register_row">
+            <div class = "register_col25">
+                <label for="from_date" th:text="#{application.date.from}" th:value="from_date"/>
+            </div>
+
+            <div class="register_col75">
+                <input type="date" th:id="dateFrom" name="dateFrom"/>
+            </div>
+
+            <div class = "register_col25">
+                <div class = "register_col25">
+                    <label for="to_date" th:text="#{application.date.to}" th:value="to_date"/>
+                </div>
+            </div>
+
+            <div class="register_col75">
+                <input type="date" th:id="to_date" name="to_date"/>
+            </div>
+
+        </div>
+
+        <div class="register_row">
+            <input type="submit" th:value="#{form.submit}"]  />
+        </div>
+    </form>
+</div>
+</div>
 </body>
+</html>
