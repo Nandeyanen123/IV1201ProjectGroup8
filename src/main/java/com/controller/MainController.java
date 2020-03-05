@@ -110,10 +110,10 @@ public class MainController {
    * @param person This is the only parameter of the method personSubmit
    * @return String returns register
    */
-  @PostMapping("/register")
+  /*@PostMapping("/register")
   public String personSubmit(@ModelAttribute Person person) {
     return "register";
-  }
+  }*/
 
   /**
    * This returns the index
