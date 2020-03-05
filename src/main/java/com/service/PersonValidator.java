@@ -9,6 +9,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.transaction.Transactional;
 
 /**
  * This class is a person validator.
@@ -36,6 +37,7 @@ public class PersonValidator implements Validator {
      * @param errors This is the second parameter of the method validate
      */
     @Override
+    @Transactional
     public void validate(Object target, Errors errors) {
         Person p = (Person) target;
 

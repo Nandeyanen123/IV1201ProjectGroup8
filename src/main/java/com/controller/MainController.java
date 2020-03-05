@@ -9,6 +9,7 @@ import com.repository.ApplikationRepository;
 import com.repository.CompetenceProfileRepository;
 import com.repository.CompetenceRepository;
 import com.repository.PersonRepository;
+import com.service.RecruitmentAppService;
 import com.service.UpdatePersonValidator;
 import com.service.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -53,6 +56,8 @@ public class MainController {
   private PasswordEncoder passwordEncoder;
   @Autowired
   private ApplikationRepository applikationRepository;
+  @Autowired
+  private RecruitmentAppService appService;
   /**
    * This method adds a new person and returns a String that is used to redirect.
    * @param person person that should be added
@@ -62,19 +67,11 @@ public class MainController {
    */
   @RequestMapping(path = "/register/add", method = RequestMethod.POST)
     public String addNewPerson(@Valid Person person, BindingResult result, SessionStatus status){
-
-    // To Create own validate
-    personValidator.validate(person,result);
-    if(result.hasErrors()){
+    result=appService.addNewPerson(person,result,status);
+    if (result.hasErrors()) {
       return "register";
-    }else{
-        String encodedPassword = passwordEncoder.encode(person.getPassword());
-        person.setPassword(encodedPassword);
-        person.setRoleId(2);
-        personRepository.save(person);
-        status.setComplete();
-        //model.addAttribute("addsuccess","Added Successfully");
-        return "redirect:/login?success";
+    } else {
+      return "redirect:/login?success";
     }
   }
 
@@ -92,7 +89,7 @@ public class MainController {
 
   @GetMapping(path="/report1testresult")
   public String getAllPeople(Model model){
-      Iterable<Person> people = personRepository.findAll();
+      Iterable<Person> people = appService.getAllPeople();
       model.addAttribute("people",people);
     return "report1testresult";
   }
@@ -163,7 +160,7 @@ public class MainController {
 
   @RequestMapping("/profile")
   public String userProfile(HttpServletRequest httpServletRequest, Model model){
-    Person person = personRepository.findByUserName(httpServletRequest.getUserPrincipal().getName());
+    Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     model.addAttribute("person" , person);
     return "profile";
   }
@@ -174,18 +171,13 @@ public class MainController {
    */
   @RequestMapping(value = "/profile/profile_update", method = RequestMethod.PUT)
   public String profileUpdate(Person personFromFrom, HttpServletRequest httpServletRequest, Model model,  BindingResult result, SessionStatus status){
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person personFromDatabase = personRepository.findByUserName(username);
-    UpdatePersonValidator updatePersonValidator = new UpdatePersonValidator();
-
-    updatePersonValidator.validate(personFromDatabase, personFromFrom , passwordEncoder,result);
-
-    if(result.hasErrors())
+    System.out.println("Transaction ongoing? : "+ TransactionSynchronizationManager.isActualTransactionActive());
+    result = appService.profileUpdate(personFromFrom,httpServletRequest.getUserPrincipal().getName(),result,status);
+    if(result.hasErrors()) {
       return "profile/profile_update";
-
-    else
-      personRepository.save(personFromDatabase);
-    return "profile";
+    }else {
+      return "profile";
+    }
   }
 
   /**
@@ -196,7 +188,7 @@ public class MainController {
    */
   @RequestMapping(value = "/profile/profile_update", method = RequestMethod.GET)
   public String profileUpdate2(Model model, HttpServletRequest httpServletRequest){
-    Person person = personRepository.findByUserName(httpServletRequest.getUserPrincipal().getName());
+    Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     model.addAttribute("person" , person);
     return "profile/profile_update";
   }
@@ -227,14 +219,8 @@ public class MainController {
    */
   @RequestMapping(value = "/profile/profile_competence", method = RequestMethod.GET)
   public String profileCompetence(Model model, HttpServletRequest httpServletRequest) {
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person person = personRepository.findByUserName(username);
-
-    Iterable<Competence_Profile> competence_Profile = competenceProfileRepository.findAllByPersonId(person.getId());
-    Iterable<Competence> competence = competenceRepository.findAll();
-
-    competenceProfileCompetenceYearDAO test = new competenceProfileCompetenceYearDAO();
-    Map<String, Integer> map = test.getCompetenceNameAndYear(person.getId(),competence_Profile, competence);
+    Iterable<Competence> competence = appService.getAllCompetence();
+    Map<String, Integer> map = appService.getProfileCompetenceMap(httpServletRequest.getUserPrincipal().getName());
 
     model.addAttribute("competence" , competence);
     model.addAttribute("map" , map);
@@ -249,12 +235,8 @@ public class MainController {
    */
   @RequestMapping(value = "/profile/profile_competence/delete/{componentName}")
   public String profile_competence_delete(HttpServletRequest httpServletRequest, @PathVariable String componentName){
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person p = personRepository.findByUserName(username);
-    Competence competence = competenceRepository.findByCompetenceName(componentName);
-    Competence_Profile profile = competenceProfileRepository.findByPersonAndCompetence(p, competence);
-    competenceProfileRepository.delete(profile);
-      return "redirect:/profile/profile_competence";
+    appService.deleteCompetenceProfile(httpServletRequest.getUserPrincipal().getName(),componentName);
+    return "redirect:/profile/profile_competence";
   }
 /*
   @RequestMapping(value = "/profile/profile_competence/add/{componentName}/{year}")
@@ -286,28 +268,14 @@ public class MainController {
    */
   @RequestMapping(value = "/profile/profile_competence/add", method = RequestMethod.POST)
   public String profile_competence_add(HttpServletRequest httpServletRequest, Competence competence){
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person p = personRepository.findByUserName(username);
-
-    String year = httpServletRequest.getParameter("year");
-    int yearInt = Integer.parseInt(year);
-    Competence_Profile checkForDuplicateCompetence = competenceProfileRepository.findByPersonAndCompetence(p,competence);
-
-    if(checkForDuplicateCompetence == null) {
-      Competence_Profile newProfile = new Competence_Profile(p, competence, yearInt);
-      competenceProfileRepository.save(newProfile);
-    }
-
+    appService.addCompetenceProfile(httpServletRequest,competence);
     return "redirect:/profile/profile_competence";
   }
 
   @RequestMapping(value = "/application/application", method = RequestMethod.GET)
   public String application(HttpServletRequest httpServletRequest, Model model){
-
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person person = personRepository.findByUserName(username);
-
-    Applikation applikation = applikationRepository.findByPerson(person);
+    Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
+    Applikation applikation = appService.findApplikationByPerson(person);
 
     model.addAttribute("applikation" , applikation);
 
