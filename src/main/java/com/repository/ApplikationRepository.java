@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ApplikationRepository  extends JpaRepository<Applikation, Integer> {
-    Applikation findByPerson(Person person);
+    Applikation findAllByPerson(Person person);
 }
 
 
