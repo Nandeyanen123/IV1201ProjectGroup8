@@ -19,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import javax.transaction.Transactional;
 
 
 /**
@@ -55,13 +58,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      * @throws UsernameNotFoundException if it doesn't find the username then it throws UsernameNotFoundException
      */
     @Override
+    @Transactional
     public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
         final String name = authentication.getName();
         final String password = authentication.getCredentials().toString();
         final Authentication auth;
 
         final List<GrantedAuthority> grantedAuths = new ArrayList<>();
-
+        System.out.println("Transaction ongoing? : "+TransactionSynchronizationManager.isActualTransactionActive());
         String encodedPassword=passwordEncoder.encode(password);
         try{
             Person person = personRepository.findByUserName(name);
@@ -107,6 +111,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      * @param grantedAuths all granted auths
      * @param personRoleId role id of person that wants auth
      */
+    @Transactional
     private void addAllRolesFromDB(List<GrantedAuthority> grantedAuths, int personRoleId){
         Iterable rolesIterable = roleRepository.findAll();
         Iterator roles = rolesIterable.iterator();

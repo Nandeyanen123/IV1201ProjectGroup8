@@ -7,6 +7,7 @@ import com.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 /**
  * This is the repository class for Competence profile.
  * It extends JpaRepository
