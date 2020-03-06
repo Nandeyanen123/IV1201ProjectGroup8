@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Component
 public class AvailabilityValidator implements Validator {
@@ -44,32 +45,9 @@ public class AvailabilityValidator implements Validator {
         if (availability.getFromDate().toString() == null)
             errors.rejectValue("getFromDate", "Please fill out valid from date");
 
-        Iterator iterator = availabilitiesFromDB.iterator();
+        if (availability.getFromDate().toString() == null)
+            errors.rejectValue("getFromDate", "Please fill out valid from date");
 
-        while (iterator.hasNext()) {
-            Availability current = (Availability) iterator.next();
-            Date currFromDate = current.getFromDate();
-            Date currToDate = current.getToDate();
-
-            if (!availability.getFromDate().before(currToDate) && !availability.getFromDate().after(currFromDate))
-                errors.rejectValue("fromDate", "Please fill out valid from date");
-
-            else if(availability.getFromDate() == currFromDate || availability.getFromDate() == currToDate)
-                errors.rejectValue("fromDate", "Please fill out valid from date");
-
-            else if(availability.getFromDate() == currFromDate || availability.getFromDate() == currToDate){
-                errors.rejectValue("fromDate", "Please fill out valid from date");}
-
-            else if(availability.getToDate() == currFromDate || availability.getToDate() == currToDate)
-                errors.rejectValue("fromDate", "Please fill out valid from date");
-
-            else if(availability.getToDate() == currFromDate || availability.getToDate() == currToDate){
-                errors.rejectValue("fromDate", "Please fill out valid from date");}
-
-            else if (availability.getToDate().before(currToDate) && availability.getToDate().after(currFromDate))
-                errors.rejectValue("toDate", "Please fill out valid to date");
-
-        }
     }
 
     private void validatePersonId() {
