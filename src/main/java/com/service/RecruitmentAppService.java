@@ -15,6 +15,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Map;
 
 @Transactional
@@ -138,5 +142,20 @@ public class RecruitmentAppService {
 
     public Iterable<Competence_Profile> getAllCompetenceByPersonId(Integer id) {
         return competenceProfileRepo.findAllByPersonId(id);
+    }
+
+    public void addApplication(Person person) {
+        Date date = new Date();
+        Applikation newApp = new Applikation(person, date);
+        appRepo.save(newApp);
+    }
+
+    public void deleteApplication(HttpServletRequest httpServletRequest, int id) {
+        String username = httpServletRequest.getUserPrincipal().getName();
+        Person person = personRepo.findByUserName(username);
+        Applikation applikation = appRepo.findById(id);
+
+        if(person.getId() == applikation.getPerson().getId())
+            appRepo.deleteById(id);
     }
 }

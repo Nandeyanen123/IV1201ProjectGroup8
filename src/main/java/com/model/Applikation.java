@@ -1,6 +1,7 @@
 package com.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -18,12 +19,22 @@ public class Applikation {
     private Date applikation_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="status", insertable = false, updatable = false)
+    @JoinColumn(name="status")
     private Status status;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="person", insertable = false, updatable = false)
+    @JoinColumn(name="person", updatable = false)
     private Person person;
+
+    public Applikation(){}
+    public Applikation(Person person, Date now) {
+        this.person = person;
+        this.applikation_date = now;
+        Status newStatus = new Status();
+        newStatus.setStatusId(3);
+        newStatus.setStatusName("Unhandled");
+        this.status = newStatus;
+    }
 
     public Integer getApplikationId() {
         return applikationId;

@@ -297,18 +297,19 @@ public class MainController {
     return"redirect:/application?deleteAvailability";
   }
 
-
-  //TODO FIX
-  @RequestMapping(value = "/application?addApplication", method = RequestMethod.POST)
+  @RequestMapping(value = "/application/addApplication", method = RequestMethod.GET)
   public String applicationAddApplication(HttpServletRequest httpServletRequest){
+    Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
+    appService.addApplication(person);
 
-    return "redirect/application";
+    return "redirect:/application?add";
   }
 
   //TODO FIX
-  @RequestMapping(value = "/applicaiton?deleteApplication/{id}", method = RequestMethod.GET)
+  @RequestMapping(value = "/application/deleteApplication/{id}", method = RequestMethod.GET)
   public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
-    return "redirect/application";
+    appService.deleteApplication(httpServletRequest, id);
+    return "redirect:/application?deleteApplication";
   }
 
 }
