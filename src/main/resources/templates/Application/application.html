@@ -5,50 +5,90 @@
     <title>Application</title>
 </head>
 <body>
-<div class="register_container">
+<div class="center">
     <h2>Add application</h2>
-</div>
+    <th:block th:text="#{application.formHeader}"/>
+    <table class="center">
+         <tr th:each="applikationDAO: ${applikationDAO}">
 
+                <th th:text="#{application.status}"/>
+                <th th:text="#{application.sendIn}"/>
+                <th th:text="#{application.delete}"/>
+        </tr>
 
-<table class = "table table-striped">
-    <tr th:each="Applikation: ${applikation}">
-    <!--/*@thymesVar id="applikation" type="com.model.Applikation"*/-->
-    <td th:text="#{application.sendIn} + ' ' + ${applikation.getApplikation_date()}"/>
-        <!--/*@thymesVar id="applikation" type="com.model.Status"*/-->
-        <!-- <td th:text="${applikation.getStatus}"/> -->
-    </tr>
-</table>
+        <!--/*@thymesVar id="applikationDAO" type="com.DAO.ApplikationDAO"*/-->
 
-<div class="register_container">
-    <!--/*@thymesVar id="availability" type="com.model.Availability"*/-->
-    <form action="#" th:action="@{/application/add}" th:object="${availability}" method="post" novalidate>
-        <th:block th:text="#{application.formHeader}"/>
-        <div class = "register_row">
-            <div class = "register_col25">
-                <label for="from_date" th:text="#{application.date.from}" th:value="from_date"/>
-            </div>
+        <!-- data -->
+        <tr>
+            <td>
+                <span th:if="${applikationDAO.getStatus().isEmpty()}" th:text="#{application.notSendIn}"></span>
+                <span th:unless="${applikationDAO.getStatus().isEmpty()}" th:text="${applikationDAO.getStatus()}"></span>
 
-            <div class="register_col75">
-                <input type="date" th:id="dateFrom" name="dateFrom"/>
-            </div>
+            </td>
 
-            <div class = "register_col25">
-                <div class = "register_col25">
-                    <label for="to_date" th:text="#{application.date.to}" th:value="to_date"/>
-                </div>
-            </div>
+            <td>
+                <span th:if="${applikationDAO.getApplikation_date().toString().isEmpty()}" th:text="#{application.notSendIn}"/>
+                <span th:unless="${applikationDAO.getApplikation_date().toString().isEmpty()}" th:text="${applikationDAO.getApplikation_date()}"/>
+            </td>
 
-            <div class="register_col75">
-                <input type="date" th:id="to_date" name="to_date"/>
-            </div>
+            <td>
+                <a th:if="${applikationDAO.getApplikationId() &gt; 0}" th:text="#{application.delete}"  th:href="@{'application/deleteApplication/' + ${applikationDAO.getApplikationId()}}"/>
+            </td>
+        </tr>
 
+        <!-- <tr th:each="applikationDAO: ${applikationDAO}"> -->
+        <tr>
+            <th th:text="#{application.fromDate}"/>
+            <th th:text="#{application.toDate}"/>
+        </tr>
+         <!-- Every availability -->
+        <p>
+            <tr th:each="availabilities: ${applikationDAO.getAvailabilities()}">
+                <td th:text="${availabilities.getFromDateFixed()} "></td>
+                <td th:text="${availabilities.getToDateFixed()}"></td>
+                <td>
+                    <a th:href="@{'/application/deleteAvailability/' + ${availabilities.getAvailabilityId() }}">
+                        <th:block th:text="#{application.delete}"/>
+                    </a>
+                </td>
+            </tr>
+        </p>
+
+            <tr height="50"><td></td><td></td></tr>
+            <tr>
+                <th th:text="#{application.yourCompetence}"/>
+                <th th:text="#{application.yearsOfExp}"/>
+            </tr>
+        </tr>
+
+        <tr th:each="map: ${applikationDAO.getCompetence_profileMap()}">
+            <!--/*@thymesVar id="key" type="java.lang.String"*/-->
+            <td th:text="${map.key}"></td>
+            <!--/*@thymesVar id="value" type="java.lang.Integer"*/-->
+            <td th:text="${map.value} + ' ' + #{profile_profile_competence.years}"></td>
+        </tr>
+
+    </table>
+
+    <div>
+        <!--/*@thymesVar id="availability" type="com.model.Availability"*/-->
+        <p>
+            <form action="#" th:action="@{/application}" th:object="${availability}" method="post" novalidate>
+                <label for="fromDate" th:text="#{application.date.from}" th:value="fromDate"/>
+                <input type="date" th:id="fromDate" name="fromDate"/>
+
+        <label for="toDate" th:text="#{application.date.to}" th:value="toDate"/>
+                <input type="date" th:id="toDate" name="toDate"/>
+
+        <input type="submit" th:value="#{form.submit}"]  />
+            </form>
+        </p>
+
+        <div th:if="${param.badDates}" class="alert alert-error">
+            Please check your dates.
         </div>
 
-        <div class="register_row">
-            <input type="submit" th:value="#{form.submit}"]  />
-        </div>
-    </form>
-</div>
+    </div>
 </div>
 </body>
 </html>
