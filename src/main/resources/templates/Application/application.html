@@ -32,7 +32,8 @@
             </td>
 
             <td>
-                <a th:if="${applikationDAO.getApplikationId() &gt; 0}" th:text="#{application.delete}"  th:href="@{'application/deleteApplication/' + ${applikationDAO.getApplikationId()}}"/>
+                <a th:if="${applikationDAO.getApplikationId() &gt; 0}" th:text="#{application.delete}"  th:href="@{'/application/deleteApplication/' + ${applikationDAO.getApplikationId()}}"/>
+                <a th:unless="${applikationDAO.getApplikationId() &gt; 0}" th:text="#{application.add}"  th:href="@{'/application/addApplication/'}"/>
             </td>
         </tr>
 
