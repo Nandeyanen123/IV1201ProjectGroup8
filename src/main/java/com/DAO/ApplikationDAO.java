@@ -29,7 +29,7 @@ public class ApplikationDAO {
         try{
             addDataFromApplikation(applikation);
             addDataFromAvailability(availability);
-            addDataFromCompetencProfile(competence_profile);
+            addDataFromCompetenceProfile(competence_profile);
         }
         catch(NullPointerException e){
             System.out.println(e.toString() + " in ApplikationDAO");
@@ -76,19 +76,25 @@ public class ApplikationDAO {
 
 
     private void addDataFromAvailability(Iterable <Availability> availability) {
-        Iterator<Availability> test = availability.iterator();
+        /*Iterator<Availability> test = availability.iterator();
         while(test.hasNext()){
             availabilities.add(test.next());
+        }*/
+        for(Availability avail: availability){
+            availabilities.add(avail);
         }
     }
 
-    private void addDataFromCompetencProfile(Iterable<Competence_Profile> competence_profile){
-        Iterator iterator = competence_profile.iterator();
+    private void addDataFromCompetenceProfile(Iterable<Competence_Profile> competence_profile){
+        /*Iterator iterator = competence_profile.iterator();
         while(iterator.hasNext()){
             Competence_Profile  currentCompetenceProfile = (Competence_Profile) iterator.next();
             String competenceName = currentCompetenceProfile.getCompetence().getCompetenceName();
             int years = currentCompetenceProfile.getYears();
             competence_profileMap.put(competenceName,years);
+        }*/
+        for(Competence_Profile cp : competence_profile){
+            competence_profileMap.put(cp.getCompetence().getCompetenceName(),cp.getYears());
         }
     }
 

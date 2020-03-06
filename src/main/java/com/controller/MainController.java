@@ -2,20 +2,13 @@ package com.controller;
 
 import com.DAO.ApplikationDAO;
 import com.model.*;
-import com.repository.*;
 import com.service.AvailabilityValidator;
 import com.model.Applikation;
 import com.model.Competence;
 import com.model.Competence_Profile;
 import com.model.Person;
-import com.repository.ApplikationRepository;
-import com.repository.CompetenceProfileRepository;
-import com.repository.CompetenceRepository;
-import com.repository.PersonRepository;
 import com.service.RecruitmentAppService;
-import com.service.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.ui.Model;
@@ -29,18 +22,16 @@ import java.util.*;
 
 /**
  * This is the MainController class.
- * It controls the addition of a person and the changes of a web page.
+ * It controls all communication between the user and the app.
  */
 @Controller
 @RequestMapping(path="/")
 @SessionAttributes("person")
 public class MainController {
 
-
   @Autowired
   private RecruitmentAppService appService;
-  @Autowired
-  private AvailabilityValidator availabilityValidator;
+
   /**
    * This method adds a new person and returns a String that is used to redirect.
    * @param person person that should be added
@@ -149,13 +140,18 @@ public class MainController {
   }
 
   /**
-   * This is used to return user logout.
-   * @return String returns logout
+   * This method updates a users profile with the users requested changes if they are valid.
+   * @param updatedPerson The requested changes
+   * @param httpServletRequest Current user
+   * @param model
+   * @param result For tracking validity
+   * @param status
+   * @return
    */
   @RequestMapping(value = "/profile/profile_update", method = RequestMethod.PUT)
-  public String profileUpdate(Person personFromFrom, HttpServletRequest httpServletRequest, Model model,  BindingResult result, SessionStatus status){
+  public String profileUpdate(Person updatedPerson, HttpServletRequest httpServletRequest, Model model,  BindingResult result, SessionStatus status){
     System.out.println("Transaction ongoing? : "+ TransactionSynchronizationManager.isActualTransactionActive());
-    result = appService.profileUpdate(personFromFrom,httpServletRequest.getUserPrincipal().getName(),result,status);
+    result = appService.profileUpdate(updatedPerson,httpServletRequest.getUserPrincipal().getName(),result,status);
     if(result.hasErrors()) {
       return "profile/profile_update";
     }else {
@@ -235,9 +231,8 @@ public class MainController {
   }
 
   /**
-   * Default page for Application
-   * An Applicant can status on its application, add/delete dates it can work.
-   * Can se which competence it has added.
+   * This method fetches all data needed for the rendering of the
+   * "Application" page and redirects the user there.
    * @param httpServletRequest with relevant authorization information
    * @param model of applikationDAO object
    * @return .html that should be loaded
@@ -256,9 +251,9 @@ public class MainController {
   }
 
   /**
-   * If user makes a post request with new dates
+   * For when a user makes a post request with new availability dates.
    * @param httpServletRequest with relevant authorization information
-   * @param availability availability object with from and to-dates.
+   * @param availability availability object with from-to dates.
    * @param result result of validation
    * @return .html that should be loaded
    */
@@ -273,7 +268,7 @@ public class MainController {
   }
 
   /**
-   * Deletes dates that an applicant cant work
+   * Deletes dates that an applicant (user) can't work
    * @param httpServletRequest with relevant authorization information
    * @param id of Availability-object that should be removed
    * @return .html that should be loaded
@@ -284,6 +279,11 @@ public class MainController {
     return"redirect:/application?deleteAvailability";
   }
 
+  /**
+   * Enables the user to create an application.
+   * @param httpServletRequest
+   * @return
+   */
   @RequestMapping(value = "/application/addApplication", method = RequestMethod.GET)
   public String applicationAddApplication(HttpServletRequest httpServletRequest){
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
@@ -293,6 +293,13 @@ public class MainController {
   }
 
   //TODO FIX
+
+  /**
+   * Deletes an Application from the users profile.
+   * @param httpServletRequest
+   * @param id
+   * @return
+   */
   @RequestMapping(value = "/application/deleteApplication/{id}", method = RequestMethod.GET)
   public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
     appService.deleteApplication(httpServletRequest, id);
