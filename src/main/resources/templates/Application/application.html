@@ -13,7 +13,10 @@
 
                 <th th:text="#{application.status}"/>
                 <th th:text="#{application.sendIn}"/>
-                <th th:text="#{application.delete}"/>
+             <th>
+                 <span th:if="${applikationDAO.getApplikationId() &gt; 0}" th:text="#{application.delete}"/>
+                 <span th:unless="${applikationDAO.getApplikationId() &gt; 0}" th:text="#{application.add}"/>
+             </th>
         </tr>
 
         <!--/*@thymesVar id="applikationDAO" type="com.DAO.ApplikationDAO"*/-->
