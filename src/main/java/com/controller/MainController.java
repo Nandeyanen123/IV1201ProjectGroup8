@@ -1,35 +1,24 @@
 package com.controller;
 
+import com.DAO.ApplikationDAO;
 import com.DAO.competenceProfileCompetenceYearDAO;
-import com.model.Applikation;
-import com.model.Competence;
-import com.model.Competence_Profile;
-import com.model.Person;
-import com.repository.ApplikationRepository;
-import com.repository.CompetenceProfileRepository;
-import com.repository.CompetenceRepository;
-import com.repository.PersonRepository;
+import com.model.*;
+import com.repository.*;
+import com.service.AvailabilityValidator;
 import com.service.UpdatePersonValidator;
 import com.service.PersonValidator;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.service.PersonValidator;
 import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -53,6 +42,10 @@ public class MainController {
   private PasswordEncoder passwordEncoder;
   @Autowired
   private ApplikationRepository applikationRepository;
+  @Autowired
+  private AvailabilityRepository availabilityRepository;
+  @Autowired
+  private AvailabilityValidator availabilityValidator;
   /**
    * This method adds a new person and returns a String that is used to redirect.
    * @param person person that should be added
@@ -251,6 +244,7 @@ public class MainController {
     Person p = personRepository.findByUserName(username);
     Competence competence = competenceRepository.findByCompetenceName(componentName);
     Competence_Profile profile = competenceProfileRepository.findByPersonAndCompetence(p, competence);
+
     competenceProfileRepository.delete(profile);
       return "redirect:/profile/profile_competence";
   }
@@ -299,18 +293,82 @@ public class MainController {
     return "redirect:/profile/profile_competence";
   }
 
-  @RequestMapping(value = "/application/application", method = RequestMethod.GET)
+
+  //TODO APPLIKATION ADD,DELETE, COMMENTS
+
+
+
+  @RequestMapping(value = "/application", method = RequestMethod.GET)
   public String application(HttpServletRequest httpServletRequest, Model model){
 
     String username = httpServletRequest.getUserPrincipal().getName();
     Person person = personRepository.findByUserName(username);
 
-    Applikation applikation = applikationRepository.findByPerson(person);
+    Applikation applikation = applikationRepository.findAllByPerson(person);
+    Iterable <Availability> availability = availabilityRepository.findAllByPersonId(person.getId());
+    Iterable<Competence_Profile> competence_Profile = competenceProfileRepository.findAllByPersonId(person.getId());
 
-    model.addAttribute("applikation" , applikation);
+    ApplikationDAO applikationDAO = new ApplikationDAO(applikation, availability,competence_Profile);
+
+    model.addAttribute("applikationDAO" , applikationDAO);
+
 
     return "/application/application";
   }
 
+  @RequestMapping(value = "/application", method = RequestMethod.POST)
+  public String applicationAdd(HttpServletRequest httpServletRequest, Availability availability, BindingResult result, SessionStatus status){
+    String username = httpServletRequest.getUserPrincipal().getName();
+    Person person = personRepository.findByUserName(username);
+    Availability newAvailability = new Availability(person, availability.getFromDate(), availability.getToDate());
+
+    availabilityValidator.validate(newAvailability,result);
+    if(result.hasErrors()) {
+      return "redirect:/application?badDates";
+    }
+    else{
+      availabilityRepository.save(newAvailability);
+    }
+
+
+
+
+    return "redirect:/application?add";
+  }
+
+  @RequestMapping(value = "/application/deleteAvailability/{id}", method = RequestMethod.GET)
+  public String applicationDeleteAvailability(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
+    try{
+
+      String username = httpServletRequest.getUserPrincipal().getName();
+      Person person = personRepository.findByUserName(username);
+      Availability newAvailability = availabilityRepository.findById(id);
+
+      if(person.getId() == newAvailability.getPerson().getId())
+        availabilityRepository.deleteById(id);
+    }
+    catch (NullPointerException e){
+      System.out.println(e.toString() + " in \"/application/deleteAvailability/{id}");
+      return ("/error");
+    }
+
+
+
+    return"redirect:/application?deleteAvailability";
+  }
+
+
+  //TODO FIX
+  @RequestMapping(value = "/application?addApplication", method = RequestMethod.POST)
+  public String applicationAddApplication(HttpServletRequest httpServletRequest){
+
+    return "redirect/application";
+  }
+
+  //TODO FIX
+  @RequestMapping(value = "/applicaiton?deleteApplication/{id}", method = RequestMethod.GET)
+  public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
+    return "redirect/application";
+  }
 
 }
