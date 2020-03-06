@@ -30,10 +30,7 @@ import javax.transaction.Transactional;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
-    PersonRepository personRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
+    RecruitmentAppService appService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -68,7 +65,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         System.out.println("Transaction ongoing? : "+TransactionSynchronizationManager.isActualTransactionActive());
         String encodedPassword=passwordEncoder.encode(password);
         try{
-            Person person = personRepository.findByUserName(name);
+            Person person = appService.findPerson(name);
             int roleId = person.getRoleId();
 
             if (person.getUserName().equals(name) && passwordEncoder.matches(password,person.getPassword())) {
@@ -113,13 +110,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      */
     @Transactional
     private void addAllRolesFromDB(List<GrantedAuthority> grantedAuths, int personRoleId){
-        Iterable rolesIterable = roleRepository.findAll();
-        Iterator roles = rolesIterable.iterator();
+        Iterable<Role> rolesIterable = appService.getAllRoles();
+        for(Role role : rolesIterable){
+            if(role.getRole_id() == personRoleId)
+                grantedAuths.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        /*Iterator roles = rolesIterable.iterator();
         while(roles.hasNext()){
             Role role = (Role) roles.next();
             if(role.getRole_id() == personRoleId)
                 grantedAuths.add(new SimpleGrantedAuthority(role.getName()));
-        }
+        }*/
     }
 
 }

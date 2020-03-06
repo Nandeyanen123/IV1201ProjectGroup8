@@ -19,7 +19,7 @@ public class AvailabilityValidator implements Validator {
     Errors errors;
     ArrayList<Availability> availabilitiesFromDB = new ArrayList<>();
     @Autowired
-    AvailabilityRepository availabilityRepository;
+    RecruitmentAppService appService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -37,7 +37,7 @@ public class AvailabilityValidator implements Validator {
     }
 
     private void getAllAvailability() {
-        availabilitiesFromDB = (ArrayList<Availability>) availabilityRepository.findAllByPersonId(availability.getPerson().getId());
+        availabilitiesFromDB = (ArrayList<Availability>) appService.findAllAvailabilityByPersonId(availability.getPerson().getId());
     }
 
     //TODO Fix better validate for date

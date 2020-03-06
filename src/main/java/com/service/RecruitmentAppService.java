@@ -65,6 +65,8 @@ public class RecruitmentAppService {
     public Person findPerson(String userName){
         return personRepo.findByUserName(userName);
     }
+    public Person findPersonBySsn(String ssn){return personRepo.findBySsn(ssn);}
+    public Person findPersonByEmail(String email){return personRepo.findByEmail(email);}
     public BindingResult profileUpdate(Person personFromFrom, String username, BindingResult result, SessionStatus status){
         System.out.println("Transaction ongoing? : "+ TransactionSynchronizationManager.isActualTransactionActive());
         Person personFromDatabase = findPerson(username);
@@ -136,7 +138,7 @@ public class RecruitmentAppService {
             availabilityRepo.deleteById(id);
     }
 
-    public Iterable<Availability> findAllAvaiilabilityByPersonId(Integer id) {
+    public Iterable<Availability> findAllAvailabilityByPersonId(Integer id) {
         return availabilityRepo.findAllByPersonId(id);
     }
 
@@ -144,6 +146,9 @@ public class RecruitmentAppService {
         return competenceProfileRepo.findAllByPersonId(id);
     }
 
+    public Iterable<Role> getAllRoles(){
+        return roleRepo.findAll();
+    }
     public void addApplication(Person person) {
         Date date = new Date();
         Applikation newApp = new Applikation(person, date);

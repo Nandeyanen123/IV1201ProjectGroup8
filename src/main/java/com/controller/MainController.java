@@ -36,22 +36,9 @@ import java.util.*;
 @SessionAttributes("person")
 public class MainController {
 
-  @Autowired
-  private PersonRepository personRepository;
-  @Autowired
-  private PersonValidator personValidator;
-  @Autowired
-  private CompetenceRepository competenceRepository;
-  @Autowired
-  private CompetenceProfileRepository competenceProfileRepository;
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-  @Autowired
-  private ApplikationRepository applikationRepository;
+
   @Autowired
   private RecruitmentAppService appService;
-  @Autowired
-  private AvailabilityRepository availabilityRepository;
   @Autowired
   private AvailabilityValidator availabilityValidator;
   /**
@@ -260,7 +247,7 @@ public class MainController {
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     Applikation applikation = appService.findApplikationByPerson(person);
 
-    Iterable <Availability> availability = appService.findAllAvaiilabilityByPersonId(person.getId());
+    Iterable <Availability> availability = appService.findAllAvailabilityByPersonId(person.getId());
     Iterable<Competence_Profile> competence_Profile = appService.getAllCompetenceByPersonId(person.getId());
 
     ApplikationDAO applikationDAO = new ApplikationDAO(applikation, availability,competence_Profile);

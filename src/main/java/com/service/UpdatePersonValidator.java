@@ -16,8 +16,6 @@ import org.springframework.validation.Validator;
 @Component
 public class UpdatePersonValidator implements Validator {
 
-    @Autowired
-    PersonRepository personRepository;
 
     /**
      * This method is used to see if the Person class equals the class parameter.

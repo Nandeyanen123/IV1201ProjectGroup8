@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private PersonRepository personRepository;
+    private RecruitmentAppService appService;
 
     /**
      * This will load the user by using the username. If it is not found it throws a
@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Person person = personRepository.findByUserName(username);
+        Person person = appService.findPerson(username);
         if(person==null)
             throw new UsernameNotFoundException("User 404");
         return new UserDetailsImp(person);
