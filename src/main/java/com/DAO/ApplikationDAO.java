@@ -4,6 +4,7 @@ import com.model.Applikation;
 import com.model.Availability;
 import com.model.Competence_Profile;
 import com.repository.AvailabilityRepository;
+import com.service.RecruitmentAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,13 +23,10 @@ public class ApplikationDAO {
     HashMap<String, Integer> competence_profileMap = new HashMap<String, Integer>();
 
     ArrayList<Availability> availabilities = new ArrayList<>();
-    @Autowired
-    AvailabilityRepository availabilityRepository;
 
     public ApplikationDAO(){}
     public ApplikationDAO(Applikation applikation, Iterable<Availability> availability,Iterable<Competence_Profile> competence_profile) {
         try{
-
             addDataFromApplikation(applikation);
             addDataFromAvailability(availability);
             addDataFromCompetencProfile(competence_profile);

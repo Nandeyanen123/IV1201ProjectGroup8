@@ -18,6 +18,7 @@ public class AvailabilityValidator implements Validator {
     Availability availability;
     Errors errors;
     ArrayList<Availability> availabilitiesFromDB = new ArrayList<>();
+
     @Autowired
     RecruitmentAppService appService;
 
