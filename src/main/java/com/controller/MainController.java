@@ -1,7 +1,6 @@
 package com.controller;
 
 import com.DAO.ApplikationDAO;
-import com.DAO.competenceProfileCompetenceYearDAO;
 import com.model.*;
 import com.repository.*;
 import com.service.AvailabilityValidator;
@@ -14,30 +13,18 @@ import com.repository.CompetenceProfileRepository;
 import com.repository.CompetenceRepository;
 import com.repository.PersonRepository;
 import com.service.RecruitmentAppService;
-import com.service.UpdatePersonValidator;
 import com.service.PersonValidator;
-import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.service.PersonValidator;
 import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -247,27 +234,6 @@ public class MainController {
     appService.deleteCompetenceProfile(httpServletRequest.getUserPrincipal().getName(),componentName);
     return "redirect:/profile/profile_competence";
   }
-/*
-  @RequestMapping(value = "/profile/profile_competence/add/{componentName}/{year}")
-  public String profile_competence_add(HttpServletRequest httpServletRequest, @PathVariable("componentName") String componentName, @PathVariable("year") String year){
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person p = personRepository.findByUserName(username);
-
-    System.out.println(p.getId());
-    Competence competence = competenceRepository.findByCompetenceName(componentName);
-    int yearInt = Integer.parseInt(year);
-
-    Competence_Profile asd = competenceProfileRepository.findByPersonAndCompetence(p,competence);
-
-    if(asd == null) {
-      Competence_Profile newProfile = new Competence_Profile(p, competence, yearInt);
-      competenceProfileRepository.save(newProfile);
-    }
-    //Competence_Profile profile = competenceProfileRepository.findByPersonAndCompetence(p, competence);
-    //competenceProfileRepository.delete(profile);
-    return "redirect:/";
-  }
-*/
 
   /**
    * This method is used when the person(user) wants to add a competence to their profile
@@ -281,64 +247,53 @@ public class MainController {
     return "redirect:/profile/profile_competence";
   }
 
-  @RequestMapping(value = "/application/application", method = RequestMethod.GET)
+  /**
+   * Default page for Application
+   * An Applicant can status on its application, add/delete dates it can work.
+   * Can se which competence it has added.
+   * @param httpServletRequest with relevant authorization information
+   * @param model of applikationDAO object
+   * @return .html that should be loaded
+   */
+  @RequestMapping(value = "/application", method = RequestMethod.GET)
   public String application(HttpServletRequest httpServletRequest, Model model){
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     Applikation applikation = appService.findApplikationByPerson(person);
 
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person person = personRepository.findByUserName(username);
-
-    Applikation applikation = applikationRepository.findAllByPerson(person);
-    Iterable <Availability> availability = availabilityRepository.findAllByPersonId(person.getId());
-    Iterable<Competence_Profile> competence_Profile = competenceProfileRepository.findAllByPersonId(person.getId());
+    Iterable <Availability> availability = appService.findAllAvaiilabilityByPersonId(person.getId());
+    Iterable<Competence_Profile> competence_Profile = appService.getAllCompetenceByPersonId(person.getId());
 
     ApplikationDAO applikationDAO = new ApplikationDAO(applikation, availability,competence_Profile);
-
     model.addAttribute("applikationDAO" , applikationDAO);
-
-
     return "/application/application";
   }
 
+  /**
+   * If user makes a post request with new dates
+   * @param httpServletRequest with relevant authorization information
+   * @param availability availability object with from and to-dates.
+   * @param result result of validation
+   * @return .html that should be loaded
+   */
   @RequestMapping(value = "/application", method = RequestMethod.POST)
-  public String applicationAdd(HttpServletRequest httpServletRequest, Availability availability, BindingResult result, SessionStatus status){
-    String username = httpServletRequest.getUserPrincipal().getName();
-    Person person = personRepository.findByUserName(username);
-    Availability newAvailability = new Availability(person, availability.getFromDate(), availability.getToDate());
+  public String applicationAddAvailability(HttpServletRequest httpServletRequest, Availability availability, BindingResult result){
+    result=appService.addAvailability(httpServletRequest, availability,result);
 
-    availabilityValidator.validate(newAvailability,result);
-    if(result.hasErrors()) {
+    if (result.hasErrors())
       return "redirect:/application?badDates";
-    }
-    else{
-      availabilityRepository.save(newAvailability);
-    }
-
-
-
-
-    return "redirect:/application?add";
+    else
+      return "redirect:/application?add";
   }
 
+  /**
+   * Deletes dates that an applicant cant work
+   * @param httpServletRequest with relevant authorization information
+   * @param id of Availability-object that should be removed
+   * @return .html that should be loaded
+   */
   @RequestMapping(value = "/application/deleteAvailability/{id}", method = RequestMethod.GET)
   public String applicationDeleteAvailability(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
-    try{
-
-      String username = httpServletRequest.getUserPrincipal().getName();
-      Person person = personRepository.findByUserName(username);
-      Availability newAvailability = availabilityRepository.findById(id);
-
-      if(person.getId() == newAvailability.getPerson().getId())
-        availabilityRepository.deleteById(id);
-    }
-    catch (NullPointerException e){
-      System.out.println(e.toString() + " in \"/application/deleteAvailability/{id}");
-      return ("/error");
-    }
-
-
-
+    appService.deleteAvailability(httpServletRequest,id);
     return"redirect:/application?deleteAvailability";
   }
 

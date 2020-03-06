@@ -1,10 +1,7 @@
 package com.service;
 
 import com.DAO.competenceProfileCompetenceYearDAO;
-import com.model.Applikation;
-import com.model.Competence;
-import com.model.Competence_Profile;
-import com.model.Person;
+import com.model.*;
 import com.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +38,8 @@ public class RecruitmentAppService {
     private RoleRepository roleRepo;
     @Autowired
     private StatusRepository statusRepo;
+    @Autowired
+    private AvailabilityValidator availabilityValidator;
 
     public BindingResult addNewPerson(@Valid Person person, BindingResult result, SessionStatus status) {
         // To Create own validate
@@ -109,5 +108,35 @@ public class RecruitmentAppService {
     }
     public Applikation findApplikationByPerson(Person person){
         return appRepo.findByPerson(person);
+    }
+
+
+    public BindingResult addAvailability(HttpServletRequest httpServletRequest, Availability availability, BindingResult result) {
+        String username = httpServletRequest.getUserPrincipal().getName();
+        Person person = personRepo.findByUserName(username);
+        Availability newAvailability = new Availability(person, availability.getFromDate(), availability.getToDate());
+
+        availabilityValidator.validate(newAvailability,result);
+        if(!result.hasErrors())
+            availabilityRepo.save(newAvailability);
+
+        return result;
+    }
+
+    public void deleteAvailability(HttpServletRequest httpServletRequest, int id){
+        String username = httpServletRequest.getUserPrincipal().getName();
+        Person person = personRepo.findByUserName(username);
+        Availability newAvailability = availabilityRepo.findById(id);
+
+        if(person.getId() == newAvailability.getPerson().getId())
+            availabilityRepo.deleteById(id);
+    }
+
+    public Iterable<Availability> findAllAvaiilabilityByPersonId(Integer id) {
+        return availabilityRepo.findAllByPersonId(id);
+    }
+
+    public Iterable<Competence_Profile> getAllCompetenceByPersonId(Integer id) {
+        return competenceProfileRepo.findAllByPersonId(id);
     }
 }
