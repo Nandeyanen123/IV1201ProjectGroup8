@@ -7,6 +7,8 @@ import com.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 
 /**
  * This is the repository class for Competence profile.
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Repository;
 public interface ApplikationRepository  extends JpaRepository<Applikation, Integer> {
     Applikation findByPerson(Person person);
     Applikation findById(int id);
+    ArrayList<Applikation> findAll();
 }
 
 
