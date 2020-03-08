@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>First report test</title>
+</head>
+<body>
+<div>
+    <h2><th:block th:text="#{recruiter.h2}"/> </h2>
+    <table class = "table table-striped">
+        <tr>
+            <th th:text="#{recruiter.name}"/>
+            <th th:text="#{recruiter.sendInDate}"/>
+            <th th:text="#{recruiter.status}"/>
+            <th th:text="#{recruiter.update}"/>
+
+        </tr>
+        <!--/*@thymesVar id="applikation" type="com.model.Applikation"*/-->
+        <tr th:each="applikation : ${applikations}">
+            <td th:text="${applikation.getPerson().getName()} + ' ' + ${applikation.getPerson().getSurName()}"/>
+            <td th:text="${applikation.getDateFixed()}"/>
+            <td th:text="${applikation.getStatus().getStatusName()}"/>
+            <td>
+                <a th:text="#{recruiter.update}" th:href="@{'/recruiter/updateApplication/' + ${applikation.getApplikationId()}}"/>
+            </td>
+
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
