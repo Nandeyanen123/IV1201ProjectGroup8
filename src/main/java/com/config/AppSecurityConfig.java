@@ -62,6 +62,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                  .antMatchers("/lockedpage").hasAuthority(RECRUITER)
                  .antMatchers("/profile/**").hasAuthority(APPLICANT)
                  .antMatchers("/application/**").hasAuthority(APPLICANT)
+                 .antMatchers("/recruiter/**").hasAuthority(RECRUITER)
                  .antMatchers("/success").anonymous()
                  .anyRequest().authenticated()
                  .and()
