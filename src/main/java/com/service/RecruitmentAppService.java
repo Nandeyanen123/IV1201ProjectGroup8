@@ -14,6 +14,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -157,5 +158,10 @@ public class RecruitmentAppService {
 
         if(person.getId() == applikation.getPerson().getId())
             appRepo.deleteById(id);
+    }
+
+    public ArrayList<Applikation> getAllApplications() {
+        ArrayList<Applikation> applikations = appRepo.findAll();
+        return applikations;
     }
 }
