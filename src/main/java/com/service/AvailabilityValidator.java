@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -38,21 +39,34 @@ public class AvailabilityValidator implements Validator {
     }
 
     private void getAllAvailability() {
-        availabilitiesFromDB = (ArrayList<Availability>) appService.findAllAvaiilabilityByPersonId(availability.getPerson().getId());
+        availabilitiesFromDB = (ArrayList<Availability>) appService.findAllAvailabilityByPersonId(availability.getPerson().getId());
     }
 
     //TODO Fix better validate for date
     private void validateDate() {
+        LocalDate current = LocalDate.now();
+        DateFormat originalFormat = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy");
+        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date toDate = originalFormat.parse(availability.getToDate().toString());
+            String formatDate = targetFormat.format(toDate);
+            LocalDate compDate = LocalDate.parse(formatDate);
+            if (compDate.isBefore(current)) {
+                errors.rejectValue("toDate", "You have to be available in the future, not in the past.");
+            }
+        }catch(ParseException ex){
+            ex.printStackTrace();
+        }
         if (availability.getFromDate().toString() == null)
-            errors.rejectValue("getFromDate", "Please fill out valid from date");
+            errors.rejectValue("fromDate", "Please fill out valid from date");
 
         if (availability.getFromDate().toString() == null)
-            errors.rejectValue("getFromDate", "Please fill out valid from date");
+            errors.rejectValue("fromDate", "Please fill out valid from date");
 
     }
 
     private void validatePersonId() {
         if(availability.getPerson() == null)
-            errors.rejectValue("person", "Person cant be null");
+            errors.rejectValue("person", "Person can't be null");
     }
 }

@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 public class PersonValidator implements Validator {
 
     @Autowired
-    PersonRepository personRepository;
+    RecruitmentAppService appService;
 
     /**
      * This method checks if support is true or not.
@@ -41,10 +41,10 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Person p = (Person) target;
 
-        if (personRepository.findBySsn(p.getSsn()) != null)
+        if (appService.findPersonBySsn(p.getSsn()) != null)
             errors.rejectValue("ssn", "ssn.is.already.taken");
 
-        if (personRepository.findByUserName(p.getUserName()) != null)
+        if (appService.findPerson(p.getUserName()) != null)
             errors.rejectValue("userName", "username.is.already.taken");
 
             /* Support for uniq email

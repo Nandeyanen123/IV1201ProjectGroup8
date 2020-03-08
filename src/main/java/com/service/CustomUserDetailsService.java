@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    RecruitmentAppService appService;
+    private RecruitmentAppService appService;
 
     /**
      * This will load the user by using the username. If it is not found it throws a
