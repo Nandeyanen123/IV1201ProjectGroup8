@@ -67,4 +67,8 @@ public class Applikation {
     public void setPerson(Person person) {
         this.person = person;
     }
+
+    public String getDateFixed(){
+        return applikation_date.toString().substring(0, 10);
+    }
 }
