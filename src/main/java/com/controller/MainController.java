@@ -9,6 +9,7 @@ import com.model.Competence_Profile;
 import com.model.Person;
 import com.service.RecruitmentAppService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.ui.Model;
@@ -304,6 +305,22 @@ public class MainController {
   public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
     appService.deleteApplication(httpServletRequest, id);
     return "redirect:/application?deleteApplication";
+  }
+
+
+
+  @RequestMapping(value ="/recruiter/")
+  public String recruiter(HttpServletRequest httpServletRequest, Model model){
+    ArrayList<Applikation> applikations =  appService.getAllApplications();
+    model.addAttribute("applikations", applikations);
+    return "/recruiter/recruiter";
+  }
+
+  //TODO FIX
+  @RequestMapping(value = "/recruiter/updateApplication/{id}")
+  public String recruiterUppdateApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
+
+    return "/recruiter/";
   }
 
 }
