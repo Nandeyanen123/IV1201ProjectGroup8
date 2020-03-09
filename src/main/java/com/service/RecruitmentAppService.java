@@ -219,6 +219,10 @@ public class RecruitmentAppService {
             if(statusFilter.getStatusId() == null || getApp.getStatus().getStatusId() == statusFilter.getStatusId())
                 applikations.add(getApp);
         }
+
+        for (Applikation asd : applikations ) {
+            System.out.println(asd.getApplikationId());
+        }
             return applikations;
     }
 
