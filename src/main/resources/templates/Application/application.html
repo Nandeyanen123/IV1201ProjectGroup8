@@ -81,17 +81,17 @@
                 <label for="fromDate" th:text="#{application.date.from}" th:value="fromDate"/>
                 <input type="date" th:id="fromDate" name="fromDate"/>
 
-        <label for="toDate" th:text="#{application.date.to}" th:value="toDate"/>
+                <label for="toDate" th:text="#{application.date.to}" th:value="toDate"/>
                 <input type="date" th:id="toDate" name="toDate"/>
 
-        <input type="submit" th:value="#{form.submit}"]  />
+                <input type="submit" th:value="#{form.submit}"]  />
+
             </form>
         </p>
 
         <div th:if="${param.badDates}" class="alert alert-error">
             Please check your dates.
         </div>
-
     </div>
 </div>
 </body>
