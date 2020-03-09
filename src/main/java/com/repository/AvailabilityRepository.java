@@ -1,9 +1,10 @@
 package com.repository;
 
-import com.model.Applikation;
 import com.model.Availability;
 import com.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,4 +17,13 @@ import java.util.ArrayList;
 public interface AvailabilityRepository extends JpaRepository<Availability, Integer> {
     Iterable <Availability> findAllByPersonId(Integer person_id);
     Availability findById(int id);
+    ArrayList<Availability> getAvailabilitiesByPersonOrderByFromDate(Person person);
+
+    @Query(value = "SELECT DISTINCT person_id from availability " +
+            "WHERE availability.from_date >= ?1 " +
+            "AND availability.from_date <= ?2 " +
+            "AND availability.to_date >= ?1 " +
+            "AND availability.to_date <= ?2",
+            nativeQuery = true)
+    ArrayList<Integer> getAllPersonIdsFromDates(@Param("from_date") String fromDate, @Param("to_date") String toDate);
 }
