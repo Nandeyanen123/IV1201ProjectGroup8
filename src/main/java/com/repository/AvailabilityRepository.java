@@ -20,10 +20,8 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Inte
     ArrayList<Availability> getAvailabilitiesByPersonOrderByFromDate(Person person);
 
     @Query(value = "SELECT DISTINCT person_id from availability " +
-            "WHERE availability.from_date >= ?1 " +
-            "AND availability.from_date <= ?2 " +
-            "AND availability.to_date >= ?1 " +
-            "AND availability.to_date <= ?2",
+            "WHERE availability.from_date <= ?1 " +
+            "AND availability.to_date >= ?2",
             nativeQuery = true)
     ArrayList<Integer> getAllPersonIdsFromDates(@Param("from_date") String fromDate, @Param("to_date") String toDate);
 }
