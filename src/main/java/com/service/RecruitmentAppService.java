@@ -14,6 +14,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -154,7 +156,7 @@ public class RecruitmentAppService {
     public void deleteApplication(HttpServletRequest httpServletRequest, int id) {
         String username = httpServletRequest.getUserPrincipal().getName();
         Person person = personRepo.findByUserName(username);
-        Applikation applikation = appRepo.findById(id);
+        Applikation applikation = appRepo.findApplikationByApplikationId(id);
 
         if(person.getId() == applikation.getPerson().getId())
             appRepo.deleteById(id);
@@ -163,5 +165,68 @@ public class RecruitmentAppService {
     public ArrayList<Applikation> getAllApplications() {
         ArrayList<Applikation> applikations = appRepo.findAll();
         return applikations;
+    }
+
+    public Applikation getApplicationById(int id) {
+        return appRepo.getOne(id);
+    }
+
+    public ArrayList<Status> getAllStatus() {
+        return statusRepo.findAll();
+    }
+
+    public void applicationUpdateStatus(int applicationId, Integer statusId) {
+        Applikation application = appRepo.findApplikationByApplikationId(applicationId);
+        Status status = statusRepo.getOne(statusId);
+        if(application != null && status != null){
+            application.setStatus(status);
+            appRepo.save(application);
+        }
+    }
+
+    public ArrayList<Availability> getAvailabilitiesByPersonOrderByAsc(Person person) {
+        return availabilityRepo.getAvailabilitiesByPersonOrderByFromDate(person);
+    }
+
+    public ArrayList<Competence_Profile> findAllByPersonOrderByCompetence(Person person) {
+        return competenceProfileRepo.findAllByPersonOrderByCompetence(person);
+    }
+
+    public ArrayList<Applikation> getAllApplicationsByFilter(Availability availability, Status statusFilter) {
+        ArrayList<Applikation> applikations = new ArrayList<>();
+        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String toDate = "";
+        String fromDate = "";
+        ArrayList<Integer> personIds;
+
+        //Fix right pattern for DB search, dates is null => return all applications
+        if(availability.getFromDate() != null && availability.getToDate() != null) {
+            fromDate = targetFormat.format(availability.getFromDate());
+            toDate = targetFormat.format(availability.getToDate());
+            personIds = availabilityRepo.getAllPersonIdsFromDates(fromDate, toDate);
+        }
+        else
+            //dates is null, return all applications
+            return getAllApplications();
+
+        for(Integer personId : personIds){
+            Applikation getApp = (appRepo.findByPersonId(personId));
+            //Goes to next application, if getApp is null aka Applicant has send in availability-dates but not sent in application.
+            if(getApp == null)
+                continue;
+
+            //Status filter null aka Recruiter filter on all status.
+            if(statusFilter.getStatusId() == null || getApp.getStatus().getStatusId() == statusFilter.getStatusId())
+                applikations.add(getApp);
+        }
+            return applikations;
+    }
+
+    public Person findPersonById(int id) {
+        return personRepo.findById(id);
+    }
+
+    public Person findPersonByApplikationId(int id) {
+        return appRepo.findApplikationByApplikationId(id).getPerson();
     }
 }
