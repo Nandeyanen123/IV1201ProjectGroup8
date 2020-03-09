@@ -1,16 +1,10 @@
 package com.model;
 
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -77,9 +71,24 @@ public class Person {
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Availability> availabilitySet;
 
+    /**
+     *
+     * @return all CompetenceProfiels that is associated with this.person
+     */
+    public Set<Competence_Profile> getCompetence_profileSet() {
+        return competence_profileSet;
+    }
+
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Competence_Profile> competence_profileSet;
 
+    /**
+     *
+     * @return all Availability that is associated with this.person
+     */
+    public Set<Availability> getAvailabilitySet() {
+        return availabilitySet;
+    }
 
     /**
      * Returns id from the column person_id
