@@ -2,14 +2,12 @@ package com.controller;
 
 import com.DAO.ApplikationDAO;
 import com.model.*;
-import com.service.AvailabilityValidator;
 import com.model.Applikation;
 import com.model.Competence;
 import com.model.Competence_Profile;
 import com.model.Person;
 import com.service.RecruitmentAppService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.ui.Model;
@@ -304,23 +302,77 @@ public class MainController {
   @RequestMapping(value = "/application/deleteApplication/{id}", method = RequestMethod.GET)
   public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
     appService.deleteApplication(httpServletRequest, id);
+
     return "redirect:/application?deleteApplication";
   }
 
-
-
-  @RequestMapping(value ="/recruiter/")
-  public String recruiter(HttpServletRequest httpServletRequest, Model model){
+  /**
+   * Main page for Recruiter, lists all the Applications and supports filter.
+   * @param model contains objects that may be showed in view-layer.
+   * @return .html that should be loaded
+   */
+  @RequestMapping(value ="/recruiter")
+  public String recruiter(Model model){
     ArrayList<Applikation> applikations =  appService.getAllApplications();
+    ArrayList<Status> status = appService.getAllStatus();
+
+    model.addAttribute("status", status);
     model.addAttribute("applikations", applikations);
+
     return "/recruiter/recruiter";
   }
 
-  //TODO FIX
-  @RequestMapping(value = "/recruiter/updateApplication/{id}")
-  public String recruiterUppdateApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
+  /**
+   * Take cares of a filter search from /recruiter page.
+   * @param model contains objects that may be showed in view-layer.
+   * @param availability which dates Recruiter wants to filter on
+   * @param statusFilter whicch status Recruiter wants to filter on
+   * @return .html that should be loaded
+   */
+  @RequestMapping(value ="/recruiter", method = RequestMethod.POST)
+  public String recruiterFilter(Model model, Availability availability, Status statusFilter){
+    ArrayList<Applikation> applikations =  appService.getAllApplicationsByFilter(availability, statusFilter);
+    ArrayList<Status> status = appService.getAllStatus();
 
-    return "/recruiter/";
+    model.addAttribute("status", status);
+    model.addAttribute("applikations", applikations);
+
+    return "/recruiter/recruiter";
+  }
+
+  /**
+   * Let recruiter view a specific application and be able to change status on it.
+   * @param model contains objects that may be showed in view-layer.
+   * @param id on specific application to be viewed
+   * @return .html that should be loaded
+   */
+  @RequestMapping(value = "/recruiter/manage_application/{id}", method = RequestMethod.GET)
+  public String recruiterManage_applications(Model model, @PathVariable("id") int id){
+    Person person = appService.findPersonByApplikationId(id);
+    Applikation application = appService.getApplicationById(id);
+    ArrayList<Status> status = appService.getAllStatus();
+    ArrayList<Availability> availabilities = appService.getAvailabilitiesByPersonOrderByAsc(person);
+    ArrayList<Competence_Profile> Competence_Profiles = appService.findAllByPersonOrderByCompetence(person);
+
+    model.addAttribute("competence_profiles", Competence_Profiles);
+    model.addAttribute("availability", availabilities);
+    model.addAttribute("status", status);
+    model.addAttribute("applikation", application);
+
+    return "recruiter/manage_application";
+  }
+
+  /**
+   * Lets recruiter change status on a specific application
+   * @param status new status on application
+   * @param id on application that should be changed
+   * @return .html that should be loaded
+   */
+  @RequestMapping(value = "/recruiter/manage_application/{id}", method = RequestMethod.POST)
+  public String recruiterUpdateApplicationStatus(Status status, @PathVariable("id") int id){
+    appService.applicationUpdateStatus(id, status.getStatusId());
+
+    return "redirect:/recruiter/manage_application/" + id;
   }
 
 }
