@@ -282,8 +282,8 @@ public class MainController {
 
   /**
    * Enables the user to create an application.
-   * @param httpServletRequest
-   * @return
+   * @param httpServletRequest This is the only parameter of the method applicationAddApplication
+   * @return String returns to page with added application
    */
   @RequestMapping(value = "/application/addApplication", method = RequestMethod.GET)
   public String applicationAddApplication(HttpServletRequest httpServletRequest){
@@ -297,9 +297,9 @@ public class MainController {
 
   /**
    * Deletes an Application from the users profile.
-   * @param httpServletRequest
-   * @param id
-   * @return
+   * @param httpServletRequest This is the first parameter of the method applicationDeleteApplication
+   * @param id This is the second parameter of the method applicationDeleteApplication
+   * @return String returns the deleteApplication
    */
   @RequestMapping(value = "/application/deleteApplication/{id}", method = RequestMethod.GET)
   public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
@@ -307,8 +307,12 @@ public class MainController {
     return "redirect:/application?deleteApplication";
   }
 
-
-
+  /**
+   * Shows the recruiter page
+   * @param httpServletRequest This is the first parameter of the method recruiter
+   * @param model This is the second parameter of the method recruiter
+   * @return String returns the recruiter page
+   */
   @RequestMapping(value ="/recruiter/")
   public String recruiter(HttpServletRequest httpServletRequest, Model model){
     ArrayList<Applikation> applikations =  appService.getAllApplications();
@@ -317,6 +321,13 @@ public class MainController {
   }
 
   //TODO FIX
+
+  /**
+   * Shows the recruiter page with updated application
+   * @param httpServletRequest This is the first parameter of the method recruiterUppdateApplication
+   * @param id This is the second parameter of the method recruiterUppdateApplication
+   * @return returns the recruiter page with updated application
+   */
   @RequestMapping(value = "/recruiter/updateApplication/{id}")
   public String recruiterUppdateApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
 

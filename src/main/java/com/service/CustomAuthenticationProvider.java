@@ -91,8 +91,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new UsernameNotFoundException("Login error");  */
     }
 
-
-
     /**
      * This method checks if the authentication is equal to the authentication the user has.
      * @param authentication This is the only parameter in the method.

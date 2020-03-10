@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * This is the repository class for Role
+ * This is the repository class for Role.
  * It extends CrudRepository
  */
 @Repository

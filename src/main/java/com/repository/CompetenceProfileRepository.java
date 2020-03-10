@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This is the repository class for Competence profile.
+ * This is the repository class for CompetenceProfile.
  * It extends JpaRepository
  */
 @Repository

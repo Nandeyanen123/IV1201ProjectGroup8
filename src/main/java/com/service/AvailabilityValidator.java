@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * This class is called AvailabilityValidator and it implements validator
+ */
 @Component
 public class AvailabilityValidator implements Validator {
     Availability availability;
@@ -23,11 +26,21 @@ public class AvailabilityValidator implements Validator {
     @Autowired
     RecruitmentAppService appService;
 
+    /**
+     * This class checks if supports is true or false
+     * @param clazz This is the only parameter of the method supports
+     * @return boolean returns false
+     */
     @Override
     public boolean supports(Class<?> clazz) {
         return false;
     }
 
+    /**
+     * This method checks the validation
+     * @param target This is the first parameter of the method validate
+     * @param errors This is the second parameter of the method validate
+     */
     @Override
     public void validate(Object target, Errors errors) {
         this.errors = errors;
@@ -38,11 +51,18 @@ public class AvailabilityValidator implements Validator {
         validateDate();
     }
 
+    /**
+     * Yhis method gets all the availability
+     */
     private void getAllAvailability() {
         availabilitiesFromDB = (ArrayList<Availability>) appService.findAllAvailabilityByPersonId(availability.getPerson().getId());
     }
 
     //TODO Fix better validate for date
+
+    /**
+     * This method validates the date
+     */
     private void validateDate() {
         LocalDate current = LocalDate.now();
         DateFormat originalFormat = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy");
@@ -65,6 +85,9 @@ public class AvailabilityValidator implements Validator {
 
     }
 
+    /**
+     * This method validates the person id
+     */
     private void validatePersonId() {
         if(availability.getPerson() == null)
             errors.rejectValue("person", "Person can't be null");

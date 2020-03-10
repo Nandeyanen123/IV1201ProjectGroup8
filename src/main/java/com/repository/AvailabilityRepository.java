@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 
 /**
- * This is the repository class for Competence profile.
+ * This is the repository class for Availability.
  * It extends JpaRepository
  */
 @Repository
