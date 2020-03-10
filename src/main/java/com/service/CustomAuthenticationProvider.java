@@ -1,12 +1,11 @@
 package com.service;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import com.Error.DatabaseExceptions;
+import com.Error.IllegalStateException;
 import com.model.Person;
 import com.model.Role;
-import com.repository.PersonRepository;
-import com.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -75,7 +74,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 return auth;
             }
         }
-        catch(NullPointerException e){
+        catch(NullPointerException | DatabaseExceptions | IllegalStateException e){
             System.out.println(e.toString() + " in CustomAuthenticationProvider");
             throw new UsernameNotFoundException("Login error");
         }
@@ -107,7 +106,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      * @param personRoleId role id of person that wants auth
      */
     @Transactional
-    private void addAllRolesFromDB(List<GrantedAuthority> grantedAuths, int personRoleId){
+    private void addAllRolesFromDB(List<GrantedAuthority> grantedAuths, int personRoleId) throws DatabaseExceptions {
         Iterable<Role> rolesIterable = appService.getAllRoles();
         for(Role role : rolesIterable){
             if(role.getRole_id() == personRoleId)

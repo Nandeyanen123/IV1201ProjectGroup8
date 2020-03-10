@@ -1,7 +1,8 @@
 package com.service;
 
+import com.Error.DatabaseExceptions;
+import com.Error.IllegalStateException;
 import com.model.Person;
-import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,7 +33,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Person person = appService.findPerson(username);
+        Person person = null;
+        try {
+            person = appService.findPerson(username);
+        } catch (DatabaseExceptions | IllegalStateException databaseExceptions) {
+            databaseExceptions.printStackTrace();
+        }
         if(person==null)
             throw new UsernameNotFoundException("User 404");
         return new UserDetailsImp(person);
