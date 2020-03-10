@@ -8,6 +8,9 @@ import com.service.RecruitmentAppService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.ui.Model;
@@ -32,6 +35,24 @@ public class MainController {
 
   @Autowired
   private RecruitmentAppService appService;
+
+
+  /**
+   * Dynamic redirect after user has logged in based on users role.
+   * @param authentication
+   * @return
+   */
+  @RequestMapping(path = "/defaultLogginPage")
+  public String defaultLogginPage(Authentication authentication){
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    for (GrantedAuthority authority :  userDetails.getAuthorities()){
+          if(authority.getAuthority().contains("applicant"))
+            return "redirect:/application";
+          else if(authority.getAuthority().contains("recruiter"))
+            return "redirect:/recruiter";
+    }
+      return "redirect:/index";
+  }
 
   /**
    * This method adds a new person and returns a String that is used to redirect.
