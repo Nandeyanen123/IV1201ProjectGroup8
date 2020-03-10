@@ -1,5 +1,6 @@
 package com.service;
 
+import com.Error.DatabaseExceptions;
 import com.model.Availability;
 import com.repository.AvailabilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,17 @@ public class AvailabilityValidator implements Validator {
         this.availability = (Availability) target;
 
         validatePersonId();
-        getAllAvailability();
+
+        try {
+            getAllAvailability();
+        } catch (DatabaseExceptions databaseExceptions) {
+            databaseExceptions.printStackTrace();
+        }
+
         validateDate();
     }
 
-    private void getAllAvailability() {
+    private void getAllAvailability() throws DatabaseExceptions {
         availabilitiesFromDB = (ArrayList<Availability>) appService.findAllAvailabilityByPersonId(availability.getPerson().getId());
     }
 

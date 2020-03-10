@@ -1,12 +1,12 @@
 package com.controller;
 
 import com.DAO.ApplikationDAO;
+import com.Error.DatabaseExceptions;
+import com.Error.IllegalStateException;
 import com.model.*;
-import com.model.Applikation;
-import com.model.Competence;
-import com.model.Competence_Profile;
-import com.model.Person;
 import com.service.RecruitmentAppService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -14,10 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import javax.servlet.http.HttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This is the MainController class.
@@ -27,6 +28,7 @@ import java.util.*;
 @RequestMapping(path="/")
 @SessionAttributes("person")
 public class MainController {
+  private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
   @Autowired
   private RecruitmentAppService appService;
@@ -39,13 +41,13 @@ public class MainController {
    * @return
    */
   @RequestMapping(path = "/register/add", method = RequestMethod.POST)
-    public String addNewPerson(@Valid Person person, BindingResult result, SessionStatus status){
+    public String addNewPerson(@Valid Person person, BindingResult result, SessionStatus status) throws DatabaseExceptions, IllegalStateException {
+    LOGGER.trace("/register/add" + "called by user");
     result=appService.addNewPerson(person,result,status);
-    if (result.hasErrors()) {
+    if (result.hasErrors())
       return "register";
-    } else {
+    else
       return "redirect:/login?success";
-    }
   }
 
   /**
@@ -61,7 +63,7 @@ public class MainController {
   }*/
 
   @GetMapping(path="/report1testresult")
-  public String getAllPeople(Model model){
+  public String getAllPeople(Model model) throws DatabaseExceptions, IllegalStateException {
       Iterable<Person> people = appService.getAllPeople();
       model.addAttribute("people",people);
     return "report1testresult";
@@ -74,19 +76,10 @@ public class MainController {
    */
   @GetMapping("/register")
   public String personForm(Model model) {
+    LOGGER.trace("/register called by user");
     model.addAttribute("person", new Person());
     return "register";
   }
-
-  /**
-   * This method is used to submit the attribute person
-   * @param person This is the only parameter of the method personSubmit
-   * @return String returns register
-   */
-  /*@PostMapping("/register")
-  public String personSubmit(@ModelAttribute Person person) {
-    return "register";
-  }*/
 
   /**
    * This returns the index
@@ -94,6 +87,7 @@ public class MainController {
    */
   @RequestMapping("/index")
   String index() {
+    LOGGER.trace("/index called by user");
     return "index";
   }
 
@@ -112,6 +106,7 @@ public class MainController {
    */
   @RequestMapping("/")
   public String homePage(){
+    LOGGER.trace("/ called by user");
     return "index";
   }
 
@@ -121,8 +116,7 @@ public class MainController {
    */
   @RequestMapping("/login")
   public String userLogin(){
-
-
+    LOGGER.trace("/login called by user");
     return "login";
   }
 
@@ -132,8 +126,10 @@ public class MainController {
    */
 
   @RequestMapping("/profile")
-  public String userProfile(HttpServletRequest httpServletRequest, Model model){
+  public String userProfile(HttpServletRequest httpServletRequest, Model model) throws DatabaseExceptions, IllegalStateException {
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
+    LOGGER.trace("/profile called by user: " + person.getUserName());
+
     model.addAttribute("person" , person);
     return "profile";
   }
@@ -148,12 +144,18 @@ public class MainController {
    * @return
    */
   @RequestMapping(value = "/profile/profile_update", method = RequestMethod.PUT)
-  public String profileUpdate(Person updatedPerson, HttpServletRequest httpServletRequest, Model model,  BindingResult result, SessionStatus status){
+  public String profileUpdate(Person updatedPerson, HttpServletRequest httpServletRequest, Model model,  BindingResult result, SessionStatus status) throws DatabaseExceptions, IllegalStateException {
+    String username = httpServletRequest.getUserPrincipal().getName();
+    LOGGER.trace("/profile/profile_update" + "called by " + username);
     System.out.println("Transaction ongoing? : "+ TransactionSynchronizationManager.isActualTransactionActive());
-    result = appService.profileUpdate(updatedPerson,httpServletRequest.getUserPrincipal().getName(),result,status);
+
+      result = appService.profileUpdate(updatedPerson,username,result,status);
     if(result.hasErrors()) {
+      LOGGER.trace("/profile/profile_update called by user and number of errors on new data is: " + result.getErrorCount());
       return "profile/profile_update";
-    }else {
+    }
+    else {
+      LOGGER.trace("/profile/profile_update could successfully updated user: " + updatedPerson.getUserName());
       return "profile";
     }
   }
@@ -165,7 +167,7 @@ public class MainController {
    * @return String This returns the updated profile.
    */
   @RequestMapping(value = "/profile/profile_update", method = RequestMethod.GET)
-  public String profileUpdate2(Model model, HttpServletRequest httpServletRequest){
+  public String profileUpdate2(Model model, HttpServletRequest httpServletRequest) throws DatabaseExceptions, IllegalStateException {
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     model.addAttribute("person" , person);
     return "profile/profile_update";
@@ -176,17 +178,9 @@ public class MainController {
    * @return String returns to logout
    */
   @RequestMapping ("/logout-success")
-  public String userLogout(){
+  public String userLogout(HttpServletRequest httpServletRequest){
+    LOGGER.trace("Successfully logged out user");
     return "logout";
-  }
-
-  /**
-   * This is used to return locked Page
-   * @return String returns lockedpage
-   */
-  @RequestMapping("/lockedpage")
-  public String lockedPage(){
-    return "lockedpage";
   }
 
   /**
@@ -196,9 +190,11 @@ public class MainController {
    * @return String This returns the competence profile.
    */
   @RequestMapping(value = "/profile/profile_competence", method = RequestMethod.GET)
-  public String profileCompetence(Model model, HttpServletRequest httpServletRequest) {
+  public String profileCompetence(Model model, HttpServletRequest httpServletRequest) throws DatabaseExceptions, IllegalStateException {
+    String username = httpServletRequest.getUserPrincipal().getName();
+    LOGGER.trace("/profile/profile_competence called by user: " + username);
     Iterable<Competence> competence = appService.getAllCompetence();
-    Map<String, Integer> map = appService.getProfileCompetenceMap(httpServletRequest.getUserPrincipal().getName());
+    Map<String, Integer> map = appService.getProfileCompetenceMap(username);
 
     model.addAttribute("competence" , competence);
     model.addAttribute("map" , map);
@@ -212,8 +208,11 @@ public class MainController {
    * @return String This returns the competence profile
    */
   @RequestMapping(value = "/profile/profile_competence/delete/{componentName}")
-  public String profile_competence_delete(HttpServletRequest httpServletRequest, @PathVariable String componentName){
-    appService.deleteCompetenceProfile(httpServletRequest.getUserPrincipal().getName(),componentName);
+  public String profile_competence_delete(HttpServletRequest httpServletRequest, @PathVariable String componentName) throws DatabaseExceptions, IllegalStateException {
+    String username = httpServletRequest.getUserPrincipal().getName();
+    LOGGER.trace("/profile/profile_competence/delete/" + componentName + " called by user: " + username);
+
+    appService.deleteCompetenceProfile(username,componentName);
     return "redirect:/profile/profile_competence";
   }
 
@@ -224,7 +223,8 @@ public class MainController {
    * @return String This returns the competence profile
    */
   @RequestMapping(value = "/profile/profile_competence/add", method = RequestMethod.POST)
-  public String profile_competence_add(HttpServletRequest httpServletRequest, Competence competence){
+  public String profile_competence_add(HttpServletRequest httpServletRequest, Competence competence) throws DatabaseExceptions, IllegalStateException {
+    LOGGER.trace("/profile/profile_competence/add called by user: " + httpServletRequest.getUserPrincipal().getName());
     appService.addCompetenceProfile(httpServletRequest,competence);
     return "redirect:/profile/profile_competence";
   }
@@ -237,8 +237,9 @@ public class MainController {
    * @return .html that should be loaded
    */
   @RequestMapping(value = "/application", method = RequestMethod.GET)
-  public String application(HttpServletRequest httpServletRequest, Model model){
+  public String application(HttpServletRequest httpServletRequest, Model model) throws DatabaseExceptions, IllegalStateException {
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
+    LOGGER.trace("/application (get) called by user: " + person.getUserName());
     Applikation applikation = appService.findApplikationByPerson(person);
 
     Iterable <Availability> availability = appService.findAllAvailabilityByPersonId(person.getId());
@@ -257,13 +258,18 @@ public class MainController {
    * @return .html that should be loaded
    */
   @RequestMapping(value = "/application", method = RequestMethod.POST)
-  public String applicationAddAvailability(HttpServletRequest httpServletRequest, Availability availability, BindingResult result){
+  public String applicationAddAvailability(HttpServletRequest httpServletRequest, Availability availability, BindingResult result) throws DatabaseExceptions, IllegalStateException {
+    LOGGER.trace("/application (post) called by user: " + httpServletRequest.getUserPrincipal().getName());
     result=appService.addAvailability(httpServletRequest, availability,result);
 
-    if (result.hasErrors())
+    if (result.hasErrors()) {
+      LOGGER.trace("/application (post) - User tried to addAvailability but failed with: " + result.getErrorCount() + " errors");
       return "redirect:/application?badDates";
-    else
+    }
+    else {
+      LOGGER.trace("/application (post) - Successfully added new Availability");
       return "redirect:/application?add";
+    }
   }
 
   /**
@@ -273,7 +279,8 @@ public class MainController {
    * @return .html that should be loaded
    */
   @RequestMapping(value = "/application/deleteAvailability/{id}", method = RequestMethod.GET)
-  public String applicationDeleteAvailability(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
+  public String applicationDeleteAvailability(HttpServletRequest httpServletRequest, @PathVariable("id") int id) throws IllegalStateException, DatabaseExceptions {
+    LOGGER.trace("/application/deleteAvailability/" + id + " was called by user: " + httpServletRequest.getUserPrincipal().getName());
     appService.deleteAvailability(httpServletRequest,id);
     return"redirect:/application?deleteAvailability";
   }
@@ -281,10 +288,10 @@ public class MainController {
   /**
    * Enables the user to create an application.
    * @param httpServletRequest
-   * @return
+   * @return .html that should be loaded
    */
   @RequestMapping(value = "/application/addApplication", method = RequestMethod.GET)
-  public String applicationAddApplication(HttpServletRequest httpServletRequest){
+  public String applicationAddApplication(HttpServletRequest httpServletRequest) throws DatabaseExceptions, IllegalStateException {
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     appService.addApplication(person);
 
@@ -297,10 +304,10 @@ public class MainController {
    * Deletes an Application from the users profile.
    * @param httpServletRequest
    * @param id
-   * @return
+   * @return .html that should be loaded
    */
   @RequestMapping(value = "/application/deleteApplication/{id}", method = RequestMethod.GET)
-  public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id){
+  public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id) throws IllegalStateException, DatabaseExceptions {
     appService.deleteApplication(httpServletRequest, id);
 
     return "redirect:/application?deleteApplication";
@@ -312,7 +319,7 @@ public class MainController {
    * @return .html that should be loaded
    */
   @RequestMapping(value ="/recruiter")
-  public String recruiter(Model model){
+  public String recruiter(Model model) throws DatabaseExceptions {
     ArrayList<Applikation> applikations =  appService.getAllApplications();
     ArrayList<Status> status = appService.getAllStatus();
 
@@ -330,8 +337,9 @@ public class MainController {
    * @return .html that should be loaded
    */
   @RequestMapping(value ="/recruiter", method = RequestMethod.POST)
-  public String recruiterFilter(Model model, Availability availability, Status statusFilter){
-    ArrayList<Applikation> applikations =  appService.getAllApplicationsByFilter(availability, statusFilter);
+  public String recruiterFilter(Model model, Availability availability, Status statusFilter, HttpServletRequest httpServletRequest) throws DatabaseExceptions {
+    LOGGER.trace("/recruiter (post) was called by user: " + httpServletRequest.getUserPrincipal().getName());
+    ArrayList<Applikation> applikations = appService.getAllApplicationsByFilter(availability, statusFilter);
     ArrayList<Status> status = appService.getAllStatus();
 
     model.addAttribute("status", status);
@@ -347,8 +355,10 @@ public class MainController {
    * @return .html that should be loaded
    */
   @RequestMapping(value = "/recruiter/manage_application/{id}", method = RequestMethod.GET)
-  public String recruiterManage_applications(Model model, @PathVariable("id") int id){
+  public String recruiterManage_applications(Model model, @PathVariable("id") int id) throws DatabaseExceptions, IllegalStateException {
     Person person = appService.findPersonByApplikationId(id);
+    LOGGER.trace("/recruiter/manage_application/" + id + " was called by user: " + person.getUserName());
+
     Applikation application = appService.getApplicationById(id);
     ArrayList<Status> status = appService.getAllStatus();
     ArrayList<Availability> availabilities = appService.getAvailabilitiesByPersonOrderByAsc(person);
@@ -369,10 +379,10 @@ public class MainController {
    * @return .html that should be loaded
    */
   @RequestMapping(value = "/recruiter/manage_application/{id}", method = RequestMethod.POST)
-  public String recruiterUpdateApplicationStatus(Status status, @PathVariable("id") int id){
+  public String recruiterUpdateApplicationStatus(HttpServletRequest httpServletRequest, Status status, @PathVariable("id") int id) throws DatabaseExceptions, IllegalStateException {
+    LOGGER.trace("/recruiter/manage_application/" + id + " was called by user: " + httpServletRequest.getUserPrincipal().getName());
     appService.applicationUpdateStatus(id, status.getStatusId());
 
     return "redirect:/recruiter/manage_application/" + id;
   }
-
 }
