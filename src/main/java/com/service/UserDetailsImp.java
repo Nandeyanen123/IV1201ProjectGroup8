@@ -10,7 +10,6 @@ import java.util.Collections;
 
 /**
  * This class implements UserDetails.
- *
  */
 public class UserDetailsImp implements UserDetails {
 

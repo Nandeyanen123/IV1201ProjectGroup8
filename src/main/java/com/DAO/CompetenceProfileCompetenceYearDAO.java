@@ -23,9 +23,7 @@ public class CompetenceProfileCompetenceYearDAO {
 
     /**
      * This is used to get the competence name and year.
-     * @param id This is the first parameter of the method
-     * @param competence_Profile This is the second parameter of the method
-     * @param competence This is the third parameter of the method
+     * @param competence_Profile This is the only parameter of the method
      * @return Map This returns a map with a string and integer values
      */
     public Map<String,Integer> getCompetenceNameAndYear(Iterable<Competence_Profile> competence_Profile){

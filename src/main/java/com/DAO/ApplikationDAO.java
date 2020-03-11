@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-//TODO Comments
-
+/**
+ * This class is called ApplikationDAO
+ */
 @Component
 public class ApplikationDAO {
     int applikationId = 0;
@@ -24,7 +25,17 @@ public class ApplikationDAO {
 
     ArrayList<Availability> availabilities = new ArrayList<>();
 
+    /**
+     * The constructor of ApplikationDAO
+     */
     public ApplikationDAO(){}
+
+    /**
+     * The constructor of ApplikationDAO with parameters
+     * @param applikation This is the first parameter of the constructor
+     * @param availability This is the second parameter of the constructor
+     * @param competence_profile This is the third parameter of the constructor
+     */
     public ApplikationDAO(Applikation applikation, Iterable<Availability> availability,Iterable<Competence_Profile> competence_profile) {
         try{
             addDataFromApplikation(applikation);
@@ -39,28 +50,57 @@ public class ApplikationDAO {
         }
 
     }
+
+    /**
+     * This method is used to get the applikation date
+     * @return String
+     */
     public String getApplikation_date() {
         return applikation_date;
     }
 
+    /**
+     * This gets the work form
+     * @return String
+     */
     public String getWorkFrom() {
         return workFrom;
     }
 
+    /**
+     * This return the work to
+     * @return String
+     */
     public String getWorkTo() {
         return workTo;
     }
 
+    /**
+     * This returns the status of the application
+     * @return String
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * This returns the application id
+     * @return int
+     */
     public int getApplikationId() {return applikationId;}
 
+    /**
+     * This returns a competence profile map
+     * @return HashMap
+     */
     public HashMap<String, Integer> getCompetence_profileMap() {
         return competence_profileMap;
     }
 
+    /**
+     * This method adds data from the applikation
+     * @param applikation This is only parameter of the method addDataFromApplikation
+     */
     private void addDataFromApplikation(Applikation applikation) {
         if(applikation != null) {
             this.applikationId = applikation.getApplikationId();
@@ -70,11 +110,18 @@ public class ApplikationDAO {
 
     }
 
+    /**
+     * This returns a list of availability
+     * @return ArrayList
+     */
     public ArrayList<Availability> getAvailabilities() {
         return availabilities;
     }
 
-
+    /**
+     * This method adds data from all availability
+     * @param availability This is the only parameter of the method addDataFromAvailability
+     */
     private void addDataFromAvailability(Iterable <Availability> availability) {
         /*Iterator<Availability> test = availability.iterator();
         while(test.hasNext()){
@@ -85,6 +132,10 @@ public class ApplikationDAO {
         }
     }
 
+    /**
+     * This method adds data from competence profile
+     * @param competence_profile This is the only parameter of the method addDataFromCompetenceProfile
+     */
     private void addDataFromCompetenceProfile(Iterable<Competence_Profile> competence_profile){
         /*Iterator iterator = competence_profile.iterator();
         while(iterator.hasNext()){
@@ -98,6 +149,11 @@ public class ApplikationDAO {
         }
     }
 
+    /**
+     * This method fixes the date format
+     * @param date This is the only parameter to the method fixDateFormat
+     * @return String
+     */
     private String fixDateFormat(Date date){
       return date.toString().substring(0, 10);
     }

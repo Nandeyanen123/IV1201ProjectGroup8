@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 /**
- * This is the repository class for Competence profile.
+ * This is the repository class for Applikation.
  * It extends JpaRepository
  */
 @Repository

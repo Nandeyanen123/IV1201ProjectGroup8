@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+/**
+ * This class is called RecruitmentAppService
+ * It has methods of all the services the app offers.
+ */
 @Transactional
 @Service
 public class RecruitmentAppService {
@@ -54,6 +58,13 @@ public class RecruitmentAppService {
 
     private String INTERNAL_SERVER_ERROR = "Internal Server Error";
 
+    /**
+     * This method adds a new person
+     * @param person This is the first parameter of the method addNewPerson
+     * @param result This is the second parameter of the method addNewPerson
+     * @param status This is the third parameter of the method addNewPerson
+     * @return BindingResult returns the result of adding a new person
+     * */
 
     public BindingResult addNewPerson(@Valid Person person, BindingResult result, SessionStatus status) throws DatabaseExceptions, IllegalStateException {
         String errMsgToUser = "Error while saving new person, please try again";
@@ -78,6 +89,13 @@ public class RecruitmentAppService {
         }
     }
 
+    /**
+     * This method returns all people
+     * @return Iterable returns an iterable of person
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
+
     public Iterable<Person> getAllPeople() throws DatabaseExceptions, IllegalStateException {
         try {
             return personRepo.findAll();
@@ -88,7 +106,13 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This method finds the user by using their name
+     * @param userName This is the only parameter of FindPerson
+     * @return Person returns the person with the name matching the parameter
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public Person findPerson(String userName) throws DatabaseExceptions, IllegalStateException {
         try {
             Person person = personRepo.findByUserName(userName);
@@ -104,6 +128,13 @@ public class RecruitmentAppService {
         }
     }
 
+    /**
+     * This method finds the user by using their ssn
+     * @param ssn This is the only parameter of the method findPersonBySsn
+     * @return Person returns the person with the ssn matching the parameter
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public Person findPersonBySsn(String ssn) throws DatabaseExceptions, IllegalStateException {
         String errMsgToUser = "Internal server error, could not find person";
         try{
@@ -123,6 +154,12 @@ public class RecruitmentAppService {
     }
 
     // REMOVE??
+    /**
+     * This method finds the user by using their email
+     * @param email This is the only parameter of the method findPersonByEmail
+     * @return Person returns the person with the email matching the email
+     * @throws DatabaseExceptions
+     */
     public Person findPersonByEmail(String email) throws DatabaseExceptions {
         String errMsgToUser = "Internal server error - Could not find user";
         try {
@@ -142,8 +179,8 @@ public class RecruitmentAppService {
         }
     }
 
-    /**
-     *
+   /**
+     * This method updates the user profile
      * @param personFromFrom Person object with new information
      * @param username username of the person to be updated
      * @param result contains error messages
@@ -173,6 +210,13 @@ public class RecruitmentAppService {
     }
 
 
+    /**
+     * Get all the competence profiles with the same person id from a person with matching username as the parameter.
+     * @param username This is the only parameter of the method getProfileCompetenceMap
+     * @return Map returns all the competence profiles with same person id
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public Map<String, Integer> getProfileCompetenceMap(String username) throws DatabaseExceptions, IllegalStateException {
             Person person = findPerson(username);
             Iterable<Competence_Profile> competence_Profile = competenceProfileRepo.findAllByPersonId(person.getId());
@@ -182,7 +226,11 @@ public class RecruitmentAppService {
             return map;
     }
 
-
+    /**
+     * This method gets all the competences
+     * @return Iterable returns a list of competences
+     * @throws DatabaseExceptions
+     */
     public Iterable<Competence> getAllCompetence() throws DatabaseExceptions {
         try {
             return competenceRepo.findAll();
@@ -193,7 +241,13 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This metod is used to delete a competence
+     * @param username This is the first parameter of the method deleteCompetenceProfile
+     * @param componentName This is the second parameter of the method deleteCompetenceProfile
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public void deleteCompetenceProfile(String username, @PathVariable String componentName) throws DatabaseExceptions, IllegalStateException {
         try {
             Person p = findPerson(username);
@@ -219,6 +273,13 @@ public class RecruitmentAppService {
         }
     }
 
+    /**
+     * This method is used to add a competence
+     * @param httpServletRequest This is the first parameter of the method addCompetenceProfile
+     * @param competence This is the second parameter of the method addCompetenceProfile
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public void addCompetenceProfile(HttpServletRequest httpServletRequest, Competence competence) throws DatabaseExceptions, IllegalStateException {
         try{
             String username = httpServletRequest.getUserPrincipal().getName();
@@ -244,6 +305,13 @@ public class RecruitmentAppService {
 
     }
 
+    /**
+     * This method finds the application by person
+     * @param person This is the only parameter of the method findApplikationByPerson
+     * @return Applikation returns the application linked to the person parameter
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
 
     public Applikation findApplikationByPerson(Person person) throws DatabaseExceptions, IllegalStateException {
         try{
@@ -259,7 +327,15 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This method adds availability
+     * @param httpServletRequest This is the first parameter of the method addAvailability
+     * @param availability This is the second parameter of the method addAvailability
+     * @param result This is the third parameter of the method addAvailability
+     * @return BindingResult returns the result of adding a new availability
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public BindingResult addAvailability(HttpServletRequest httpServletRequest, Availability availability, BindingResult result) throws DatabaseExceptions, IllegalStateException {
         try {
             String username = httpServletRequest.getUserPrincipal().getName();
@@ -278,6 +354,13 @@ public class RecruitmentAppService {
         }
     }
 
+    /**
+     * This method deletes availability
+     * @param httpServletRequest This is the first parameter of the method deleteAvailability
+     * @param id This is the second parameter of the method deleteAvailability
+     * @throws IllegalStateException
+     * @throws DatabaseExceptions
+     */
     public void deleteAvailability(HttpServletRequest httpServletRequest, int id) throws IllegalStateException, DatabaseExceptions {
         try {
             String username = httpServletRequest.getUserPrincipal().getName();
@@ -306,7 +389,12 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This method finds all availability by person id
+     * @param id This is the only parameter of the method findAllAvailabilityByPersonId
+     * @return Iterable returns all availability with person id that matches the parameter
+     * @throws DatabaseExceptions
+     */
     public Iterable<Availability> findAllAvailabilityByPersonId(Integer id) throws DatabaseExceptions {
         try {
             return availabilityRepo.findAllByPersonId(id);
@@ -317,7 +405,12 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This method returns all competence profiles by person id
+     * @param id This is the only parameter of the method getAllCompetenceByPersonId
+     * @return Iterable returns competence profiles with person id that matches the parameter
+     * @throws DatabaseExceptions
+     */
     public Iterable<Competence_Profile> getAllCompetenceByPersonId(Integer id) throws DatabaseExceptions {
         try {
             return competenceProfileRepo.findAllByPersonId(id);
@@ -329,6 +422,11 @@ public class RecruitmentAppService {
     }
 
 
+    /**
+     * This method gets all roles
+     * @return Iterable returns all roles
+     * @throws DatabaseExceptions
+     */
     public Iterable<Role> getAllRoles() throws DatabaseExceptions {
         try {
             return roleRepo.findAll();
@@ -340,8 +438,12 @@ public class RecruitmentAppService {
     }
 
 
+    /**
+     * This method adds an application
+     * @param person This is the only parameter of the method addApplication
+     */
     public void addApplication(Person person) throws DatabaseExceptions, IllegalStateException {
-        if(person == null) {
+        if(person == null){
             LOGGER.warn("USER TRIES TO ADD APPLICATION WITH PERSON OBJECT IS NULL");
             throw new IllegalStateException("COULD NOT ADD APPLICATION TO PERSON");
         }
@@ -358,6 +460,13 @@ public class RecruitmentAppService {
     }
 
 
+    /**
+     * This method deletes an application
+     * @param httpServletRequest This is the first parameter of the method deleteApplication
+     * @param id This is the second parameter of the method deleteApplication
+     * @throws IllegalStateException
+     * @throws DatabaseExceptions
+     */
     public void deleteApplication(HttpServletRequest httpServletRequest, int id) throws IllegalStateException, DatabaseExceptions {
         String username = httpServletRequest.getUserPrincipal().getName();
         Person person = findPerson(username);
@@ -376,7 +485,11 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This method gets all applications
+     * @return ArrayList returns all applications
+     * @throws DatabaseExceptions
+     */
     public ArrayList<Applikation> getAllApplications() throws DatabaseExceptions {
         try{
             ArrayList<Applikation> applikations = appRepo.findAll();
@@ -388,7 +501,12 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This method gets an applikcation whose id matches the parameter
+     * @param id This is the only parameter of the method getApplication by id
+     * @return Applikation returns the application with matching id
+     * @throws DatabaseExceptions
+     */
     public Applikation getApplicationById(int id) throws DatabaseExceptions {
         try{
             return appRepo.getOne(id);
@@ -399,7 +517,11 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     * This method returns a list containing all statuses
+     * @return Arraylist return a list of all statuses
+     * @throws DatabaseExceptions
+     */
     public ArrayList<Status> getAllStatus() throws DatabaseExceptions {
         try{
             return statusRepo.findAll();
@@ -440,7 +562,13 @@ public class RecruitmentAppService {
 
     }
 
-
+    /**
+     * This method gets all availabilities in a list in ascending order
+     * @param person This is the only parameter of the method getAvailabilitesByPersonOrderByAsc
+     * @return ArrayList returns a list of availability
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public ArrayList<Availability> getAvailabilitiesByPersonOrderByAsc(Person person) throws DatabaseExceptions, IllegalStateException {
         if(person == null){
             LOGGER.warn("TRYING TO GET AVAILABILITES FROM A NULL PERSON IN getAvailabilitiesByPersonOrderByAsc");
@@ -457,7 +585,13 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     *
+     * @param person This is the only parameter of the method findAllByPersonOrderByCompetence
+     * @return ArrayList returns a list of availability
+     * @throws IllegalStateException
+     * @throws DatabaseExceptions
+     */
     public ArrayList<Competence_Profile> findAllByPersonOrderByCompetence(Person person) throws IllegalStateException, DatabaseExceptions {
         if(person == null){
             LOGGER.warn("TRYING TO GET Competence_Profile FROM A NULL PERSON IN findAllByPersonOrderByCompetence");
@@ -473,6 +607,13 @@ public class RecruitmentAppService {
     }
 
     //TODO NEED ERROR HANDLING WHEN IT IS DONE
+    /**
+     *
+     * @param availability
+     * @param statusFilter
+     * @return
+     * @throws DatabaseExceptions
+     */
     public ArrayList<Applikation> getAllApplicationsByFilter(Availability availability, Status statusFilter) throws DatabaseExceptions {
         ArrayList<Applikation> applikations = new ArrayList<>();
         DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -509,7 +650,13 @@ public class RecruitmentAppService {
             return applikations;
     }
 
-
+    /**
+     *
+     * @param id
+     * @return
+     * @throws IllegalStateException
+     * @throws DatabaseExceptions
+     */
     public Person findPersonById(int id) throws IllegalStateException, DatabaseExceptions {
         try {
             Person person = personRepo.findById(id);
@@ -525,7 +672,13 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     *
+     * @param id
+     * @return
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public Person findPersonByApplikationId(int id) throws DatabaseExceptions, IllegalStateException {
         try{
             Person person = appRepo.findApplikationByApplikationId(id).getPerson();
@@ -541,6 +694,11 @@ public class RecruitmentAppService {
         }
     }
 
+    /**
+     *
+     * @param username This is the only parameter of the method personExistsByUsername
+     * @return boolean
+     */
     public boolean personExistsByUsername(String username){
         Person person = personRepo.findByUserName(username);
 
@@ -550,6 +708,11 @@ public class RecruitmentAppService {
             return true;
     }
 
+    /**
+     *
+     * @param ssn This is the only parameter of the method personExistsBySSN
+     * @return boolean
+     */
     public boolean personExistsBySSN(String ssn) {
         Person person = personRepo.findBySsn(ssn);
 
