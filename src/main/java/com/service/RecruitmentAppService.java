@@ -342,7 +342,7 @@ public class RecruitmentAppService {
             Person person = findPerson(username);
             Availability newAvailability = new Availability(person, availability.getFromDate(), availability.getToDate());
 
-            availabilityValidator.validate(newAvailability, result);
+            availabilityValidator.validateDates(newAvailability, result);
             if (!result.hasErrors())
                 availabilityRepo.save(newAvailability);
 

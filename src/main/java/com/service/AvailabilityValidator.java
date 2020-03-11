@@ -1,10 +1,11 @@
 package com.service;
 
 import com.Error.DatabaseExceptions;
+import com.controller.MainController;
 import com.model.Availability;
-import com.repository.AvailabilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -12,8 +13,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * This class is called AvailabilityValidator and it implements validator
@@ -37,26 +38,9 @@ public class AvailabilityValidator implements Validator {
         return false;
     }
 
-    /**
-     * This method checks the validation
-     * @param target This is the first parameter of the method validate
-     * @param errors This is the second parameter of the method validate
-     */
+
     @Override
-    public void validate(Object target, Errors errors) {
-        this.errors = errors;
-        this.availability = (Availability) target;
-
-        validatePersonId();
-
-        try {
-            getAllAvailability();
-        } catch (DatabaseExceptions databaseExceptions) {
-            databaseExceptions.printStackTrace();
-        }
-
-        validateDate();
-    }
+    public void validate(Object target, Errors errors){}
 
     /**
      * This method gets all the availability
@@ -99,5 +83,20 @@ public class AvailabilityValidator implements Validator {
     private void validatePersonId() {
         if(availability.getPerson() == null)
             errors.rejectValue("person", "Person can't be null");
+    }
+
+    /**
+     * Validates data on new Availability object
+     * @param newAvailability data to be validated
+     * @param errors contains all errors
+     * @throws DatabaseExceptions throws exception if databas fails
+     */
+    public void validateDates(Availability newAvailability, Errors errors) throws DatabaseExceptions {
+        this.errors = errors;
+        this.availability = newAvailability;
+
+        validatePersonId();
+        getAllAvailability();
+        validateDate();
     }
 }
