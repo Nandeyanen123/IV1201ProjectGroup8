@@ -488,7 +488,8 @@ public class RecruitmentAppService {
         }
         else
             //dates is null, return all applications
-            return getAllApplications();
+            //return getAllApplications();
+            personIds = availabilityRepo.getAllPersonId();
 
         for(Integer personId : personIds){
             Applikation getApp = (appRepo.findByPersonId(personId));

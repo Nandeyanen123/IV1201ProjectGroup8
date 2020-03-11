@@ -24,4 +24,9 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Inte
             "AND availability.to_date >= ?2",
             nativeQuery = true)
     ArrayList<Integer> getAllPersonIdsFromDates(@Param("from_date") String fromDate, @Param("to_date") String toDate);
+
+    @Query(value = "SELECT DISTINCT person_id FROM availability", nativeQuery = true)
+    ArrayList<Integer> getAllPersonId();
+
+
 }

@@ -13,21 +13,25 @@
             <div class="container">
                 <ul class="nav navbar-nav">
 
-                    <!-- Home button, always visible-->
                     <li class="active">
                         <a href="/">
                             <span class="glyphicon glyphicon-home" th:text= "' ' + #{header.index}"/>
                         </a>
                     </li>
 
-                    <!-- Profile button, only visible when logged in-->
-                    <li class="active" sec:authorize ="isAuthenticated()">
+                    <li class="active" sec:authorize ="hasAuthority('applicant')">
                             <a href="/profile">
                                 <span class="glyphicon glyphicon-user" th:text="#{header.profile}"/>
                         </a>
                     </li>
 
-                    <!-- Login button, only visible when not logged in-->
+                    <li class="active" sec:authorize ="hasAuthority('recruiter')">
+                        <a href="/recruiter">
+                            <span class="glyphicon glyphicon-user" th:text="#{header.recruiter}"/>
+                        </a>
+                    </li>
+
+
                     <li class="active" sec:authorize = "!isAuthenticated()">
                         <a href="/login">
                             <span class="glyphicon>" th:text="#{header.login}"/>
@@ -35,7 +39,6 @@
 
                 </li>
 
-                    <!-- Register button, only visible when not logged in-->
                     <li class="active" sec:authorize = "!isAuthenticated()">
                         <a href="/register">
                             <span class="glyphicon>" th:text="#{header.register}" />
