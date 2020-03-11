@@ -71,24 +71,6 @@ public class MainController {
       return "redirect:/login?success";
   }
 
-  /**
-   * This method is used to get all the people from the repository and add their attributes to the model parameter.
-   * @param model This is the only parameter of the getAllPeople method.
-   * @return String this returns report1testresult
-   */
-  /*@RequestMapping(value = "success/{addsuccess}", method = RequestMethod.GET)
-  public String success(@PathVariable("addsuccess") String addsuccess, Model model)
-  {
-    model.addAttribute("addsuccess",addsuccess);
-    return "redirect:/login?success";
-  }*/
-
-  @GetMapping(path="/report1testresult")
-  public String getAllPeople(Model model) throws DatabaseExceptions, IllegalStateException {
-      Iterable<Person> people = appService.getAllPeople();
-      model.addAttribute("people",people);
-    return "report1testresult";
-  }
 
   /**
    * This method adds attribute to the model parameter with a new Person() and returns register.
@@ -110,15 +92,6 @@ public class MainController {
   String index() {
     LOGGER.trace("/index called by user");
     return "index";
-  }
-
-  /**
-   * This is used to test the report
-   * @return String returns report1test
-   */
-  @RequestMapping("/report")
-  String repTest() {
-    return "report1test";
   }
 
   /**
