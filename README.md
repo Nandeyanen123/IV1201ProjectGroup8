@@ -1,40 +1,35 @@
-# java-getting-started
+# MEED Recruitment Application
 
-A barebones Java app, which can easily be deployed to Heroku.
+No more headaches in your recruitment process! The MEED Recruitment Application is a stable and easy-to-use solution that is guaranteed to keep your applicants and recruiters happy by providing a user friendly UI with excellent and stable performance.
 
-This application supports the [Getting Started with Java on Heroku](https://devcenter.heroku.com/articles/getting-started-with-java) article - check it out.
+## Usage
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+The application is deployed on heroku at the following URL:
+https://iv1201-project-group8.herokuapp.com/
 
 ## Running Locally
 
-Make sure you have Java and Maven installed.  Also, install the [Heroku CLI](https://cli.heroku.com/).
+Make sure you have Java and Maven installed. 
 
 ```sh
-$ git clone https://github.com/heroku/java-getting-started.git
-$ cd java-getting-started
+$ git clone https://github.com/Nandeyanen123/IV1201ProjectGroup8.git
+$ cd IV1201ProjectGroup8
 $ mvn install
-$ heroku local:start
+$ cd src/main/java/com
+$ javac Main.java
+$ java Main
 ```
 
-Your app should now be running on [localhost:5000](http://localhost:5000/).
+Your app should now be running on [localhost:8080](http://localhost:8080/) given that you have received the additional config files.
 
-If you're going to use a database, ensure you have a local `.env` file that reads something like this:
+## Use cases
 
-```
-JDBC_DATABASE_URL=jdbc:postgresql://localhost:5432/java_database_name
-```
+Recruiters will be able to log in and manage applications by entering their credentials at the login screen. Applicants will be able to register with a simple click on the header toolbar.
 
-## Deploying to Heroku
+An applicant is after a successful login able to update their personal information as well as send in an application to all recruiters specifying their professional competence as well as the days they are available for work.
 
-```sh
-$ heroku create
-$ git push heroku master
-$ heroku open
-```
+A recruiter is able to view and review all applications and decide if they're to be accepted or rejected.
 
-## Documentation
+## Copyright
 
-For more information about using Java on Heroku, see these Dev Center articles:
-
-- [Java on Heroku](https://devcenter.heroku.com/categories/java)
+Written by Erik Mickols, Daniel Westerlund, Maryam Marzban and Emma Baltatzis for the course IV1201 at The Royal Institute of Technology (KTH) in 2020.
