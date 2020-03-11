@@ -287,13 +287,8 @@ public class MainController {
 
   /**
    * Enables the user to create an application.
-<<<<<<< HEAD
    * @param httpServletRequest This is the only parameter of the method applicationAddApplication
-   * @return String returns to page with added application
-=======
-   * @param httpServletRequest
-   * @return .html that should be loaded
->>>>>>> c505fc70b23fe893fa3231149d235d1798db747b
+   * @return String .html that should be loaded
    */
   @RequestMapping(value = "/application/addApplication", method = RequestMethod.GET)
   public String applicationAddApplication(HttpServletRequest httpServletRequest) throws DatabaseExceptions, IllegalStateException {

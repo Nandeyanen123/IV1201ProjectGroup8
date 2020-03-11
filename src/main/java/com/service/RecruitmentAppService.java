@@ -607,6 +607,13 @@ public class RecruitmentAppService {
     }
 
     //TODO NEED ERROR HANDLING WHEN IT IS DONE
+    /**
+     *
+     * @param availability
+     * @param statusFilter
+     * @return
+     * @throws DatabaseExceptions
+     */
     public ArrayList<Applikation> getAllApplicationsByFilter(Availability availability, Status statusFilter) throws DatabaseExceptions {
         ArrayList<Applikation> applikations = new ArrayList<>();
         DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -642,7 +649,13 @@ public class RecruitmentAppService {
             return applikations;
     }
 
-
+    /**
+     *
+     * @param id
+     * @return
+     * @throws IllegalStateException
+     * @throws DatabaseExceptions
+     */
     public Person findPersonById(int id) throws IllegalStateException, DatabaseExceptions {
         try {
             Person person = personRepo.findById(id);
@@ -658,7 +671,13 @@ public class RecruitmentAppService {
         }
     }
 
-
+    /**
+     *
+     * @param id
+     * @return
+     * @throws DatabaseExceptions
+     * @throws IllegalStateException
+     */
     public Person findPersonByApplikationId(int id) throws DatabaseExceptions, IllegalStateException {
         try{
             Person person = appRepo.findApplikationByApplikationId(id).getPerson();
@@ -674,6 +693,11 @@ public class RecruitmentAppService {
         }
     }
 
+    /**
+     *
+     * @param username This is the only parameter of the method personExistsByUsername
+     * @return boolean
+     */
     public boolean personExistsByUsername(String username){
         Person person = personRepo.findByUserName(username);
 
@@ -683,6 +707,11 @@ public class RecruitmentAppService {
             return true;
     }
 
+    /**
+     *
+     * @param ssn This is the only parameter of the method personExistsBySSN
+     * @return boolean
+     */
     public boolean personExistsBySSN(String ssn) {
         Person person = personRepo.findBySsn(ssn);
 
