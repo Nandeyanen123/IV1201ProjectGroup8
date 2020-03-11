@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <th:block th:text="#{manage_application.title}"/>
+    </title>
+</head>
+<body>
+<div class="center">
+    <p>
+        <th:block th:text="#{recruiter.name} + ': '"/>
+        <th:block th:text="${applikation.getPerson().getName()} + ' ' + ${applikation.getPerson().getSurName()}"/>
+        </br>
+
+        <th:block th:text="#{recruiter.sendInDate} + ': '"/>
+        <th:block th:text="${applikation.getDateFixed()}"/>
+        </br>
+
+
+        <th:block th:text="#{recruiter.status}"/>
+        <th:block th:text="${applikation.getStatus().getStatusName()}"/>
+        </br>
+    </p>
+
+    <p class="bold">
+        <th th:text="#{manage_application.dateFrom}"/>
+        <th th:text="#{manage_application.dateTo}"/>
+    </p>
+    <table class="center">
+        <!--/*@thymesVar id="availability" type="com.model.Availability"*/-->
+        <tr th:each="availability : ${availability}">
+                <td th:text="${availability.getFromDateFixed()}"/>
+                <td th:text="${availability.getToDateFixed()}"/>
+        </tr>
+    </table>
+
+    <p class="bold">
+        <th:block th:text="#{manage_application.competence}"/>
+    </p>
+    <table class="center">
+        <!--/*@thymesVar id="competence" type="com.model.Competence_Profile"*/-->
+        <tr th:each="competenceProfile : ${competence_profiles}">
+            <td th:text="${competenceProfile.getCompetence().getCompetenceName()}"/>
+            <td th:text="${competenceProfile.getYears()} + ' ' + #{manage_application.years}"/>
+        </tr>
+    </table>
+
+    <th th:text="#{manage_application.changeApplicationStatus}"/>:
+
+    <form action="#" th:action="@{'/recruiter/manage_application/' + ${applikation.getApplikationId()}}" th:object="${status}" method="post">
+        <select th:id="status" th:name="status">
+            <!--/*@thymesVar id="status" type="com.model.Status"*/-->
+            <tr th:each="status : ${status}">
+                <!--/*@thymesVar id="status" type="com.model.Status"*/-->
+                <option th:value="${status.getStatusId()}"> <th th:text="${status.getStatusName()}" th:name="status" /> </option>
+            </tr>
+        </select>
+        <input type="submit" value="Update"/>
+    </form>
+
+</div>
+
+</body>
+</html>

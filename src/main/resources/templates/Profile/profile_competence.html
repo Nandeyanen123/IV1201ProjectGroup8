@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}">
+
+<body>
+<div>
+    <h2>
+        <th:block th:text="#{profile_profile_competence.header2}"></th:block>
+    </h2>
+
+    <table class = "table table-striped">
+        <!--/*@thymesVar id="map" type="java.util.HashMap"*/-->
+        <tr th:each="map: ${map}">
+            <!--/*@thymesVar id="key" type="java.lang.String"*/-->
+            <td th:text="${map.key}"></td>
+            <!--/*@thymesVar id="value" type="java.lang.Integer"*/-->
+            <td th:text="${map.value} + ' ' + #{profile_profile_competence.years}"></td>
+            <td>
+                <a th:href="@{'profile_competence/delete/' + ${map.key}}">
+                    <th:block th:text="#{profile_profile_competence.delete}">></th:block>
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <!--/*@thymesVar id="competence" type="com.model.Competence"*/-->
+    <form action="#" th:action="@{/profile/profile_competence/add/}"  th:object="${competence}" method="post">
+        <div class="col-lg-3" th:object="${competence}">
+            <select class="form-control" id="competence" name="competence">
+                <option th:each="competence : ${competence}"
+                        th:value="${competence.getCompetenceId()}"
+                        th:text="${competence.getCompetenceName()}">
+                </option>
+            </select>
+        </div>
+
+        <p>
+            <th:block th:text="#{profile_profile_competence.yearsOfExp}"></th:block>
+            <input type="text" name="year" />
+        </p>
+        <input type="submit" value="post"/>
+    </form>
+
+</div>
+</body>
+

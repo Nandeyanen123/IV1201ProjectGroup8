@@ -7,15 +7,17 @@
 <body>
 <div class="register_container">
     <h2>Register account</h2>
+</div>
     <div class="register_container">
         <!--/*@thymesVar id="person" type="com.model.Person"*/-->
-        <form action="#" th:action="@{/register/add}" th:object="${person}" method="post">
+        <form action="#" th:action="@{/register/add}" th:object="${person}" method="post" novalidate>
             <div class = "register_row">
                 <div class = "register_col25">
                     <label class="register_label" for="name">First name</label>
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{name}" placeholder="Your name"/></p>
+                    <font color="red" ><span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/></font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -23,6 +25,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{surName}" placeholder="Last name" /></p>
+                    <font color="red" ><span th:if="${#fields.hasErrors('surName')}" th:errors="*{surName}"/></font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -30,13 +33,15 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{ssn}" placeholder="Ssn" /></p>
+                    <font color="red" ><font th:if="${#fields.hasErrors('ssn')}" th:errors="*{ssn}"/> </font></span>
                 </div>
 
                 <div class = "register_col25">
                     <label class="register_label" for="email">Email</label>
                 </div>
                 <div class="register_col75">
-                    <p><input type="email" th:field="*{email}" placeholder="mail@domain.com" /></p>
+                    <p><input type="email" th:field="*{email}" placeholder="mail@domain.com"/></p>
+                    <font color="red" ><span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" /> </font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -44,6 +49,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="password" th:field="*{password}" placeholder="Password" /></p>
+                    <font color="red" ><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/></font></span>
                 </div>
 
                 <div class = "register_col25">
@@ -51,6 +57,7 @@
                 </div>
                 <div class="register_col75">
                     <p><input type="text" th:field="*{userName}" placeholder="Username" /></p>
+                    <font color="red" ><font th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"/> </font></span>
                 </div>
             </div>
             <div class="register_row">

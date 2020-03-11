@@ -1,12 +1,15 @@
 package com.service;
 
+import com.Error.DatabaseExceptions;
+import com.Error.IllegalStateException;
 import com.model.Person;
-import com.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 /**
  * This class implements UserDetailsService.
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private PersonRepository personRepository;
+    private RecruitmentAppService appService;
 
     /**
      * This will load the user by using the username. If it is not found it throws a
@@ -27,9 +30,15 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException This method throws UsernameNotFoundException
      */
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Person person = personRepository.findByUserName(username);
+        Person person = null;
+        try {
+            person = appService.findPerson(username);
+        } catch (DatabaseExceptions | IllegalStateException databaseExceptions) {
+            databaseExceptions.printStackTrace();
+        }
         if(person==null)
             throw new UsernameNotFoundException("User 404");
         return new UserDetailsImp(person);

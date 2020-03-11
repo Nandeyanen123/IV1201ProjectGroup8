@@ -1,11 +1,10 @@
 package com.model;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
-import java.util.Collection;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -22,25 +21,74 @@ public class Person {
     @Column(name="person_id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+
+    @Pattern(regexp = "^[a-zA-ZåäöÅÄÖ]*$", message = "Use only letters")
     @Column(name="name")
+    @Size(min=1, max = 45 , message = "Please fill out a name (max 45 chars)")
+    @NotNull
     private String name;
+
+    @Pattern(regexp = "^[a-zA-ZåäöÅÄÖ]*$", message = "Use only letters")
     @Column(name="surname")
+    @Size(min=1, max = 45, message = "Please fill out a surname (max 45 chars)")
+    @NotNull
     private String surName;
+
+    //@Pattern(regexp="^(19|20)?[0-9]{6}[- ]?[0-9]{4}$", message="Use format 19000101-0101")
+    @Pattern(regexp = "^[0-9]*$" , message = "Use format yymmddxxxx")
+    @Size(min = 1 , message = "Please enter ssn")
+    @NotNull
     @Column(name="ssn", unique = true)
     private String ssn;
+
+    @NotNull
+    @Email(message = "Please enter your email")
+    @Size(min = 1 , message = "Please enter your email")
     @Column(name="email")
     private String email;
+
+    @NotNull
+    @Size(min = 10, max = 70, message="Password needs to be at least 10 characters long")
     @Column(name="password")
     private String password;
 
     @Column(name="role_id")
     private Integer roleId;
-    @Column(name="username")
+
+    @Pattern(regexp = "^[a-zA-Z0-9åäöÅÄÖ]*$")
+    @NotNull
+    @Size(min = 5, max = 45)
+    @Column(name="username", unique = true)
     private String userName;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name= "role_id", nullable = false,updatable = false,insertable = false)
     private Role role;
 
+    @OneToOne(mappedBy = "person", fetch = FetchType.LAZY)
+    private Applikation applikation;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Availability> availabilitySet;
+
+    /**
+     *
+     * @return all CompetenceProfiels that is associated with this.person
+     */
+    public Set<Competence_Profile> getCompetence_profileSet() {
+        return competence_profileSet;
+    }
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Competence_Profile> competence_profileSet;
+
+    /**
+     *
+     * @return all Availability that is associated with this.person
+     */
+    public Set<Availability> getAvailabilitySet() {
+        return availabilitySet;
+    }
 
     /**
      * Returns id from the column person_id
@@ -138,10 +186,18 @@ public class Person {
         this.password = password;
     }
 
+    /**
+     * Returns a person role id from the column role
+     * @return Integer This returns the role id.
+     */
     public Integer getRoleId() {
         return roleId;
     }
 
+    /**
+     * Set a integer value inside the column role
+     * @param roleId This is the only parameter in the setRoleId method
+     */
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
@@ -162,10 +218,18 @@ public class Person {
         this.userName = userName;
     }
 
+    /**
+     * Returns the a role variable that is connected to the table Role
+     * @return Role this returns the role
+     */
     public Role getRole() {
         return role;
     }
 
+    /**
+     * Set a new role value to the user.
+     * @param role This is the only parameter in the setRole method
+     */
     public void setRole(Role role) {
         this.role = role;
     }

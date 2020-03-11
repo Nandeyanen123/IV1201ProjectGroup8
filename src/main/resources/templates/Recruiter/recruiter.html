@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'index')}" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>First report test</title>
+</head>
+<body>
+<div>
+    <h2><th:block th:text="#{recruiter.h2}"/> </h2>
+
+    <!--/*@thymesVar id="availability" type="com.model.Availability"*/-->
+    <form action="#" th:action="@{/recruiter}" th:object="${availability}" method="post" novalidate>
+        <label for="fromDate" th:text="#{application.date.from}" th:value="fromDate"/>
+        <input type="date" th:id="fromDate" th:name="fromDate"/>
+
+        <label for="toDate" th:text="#{application.date.to}" th:value="toDate"/>
+        <input type="date" th:id="toDate" th:name="toDate"/>
+
+        <!--/*@thymesVar id="status" type="com.model.Status"*/-->
+        <select th:id="status" th:name="status">
+            <tr th:each="status : ${status}">
+                <!--/*@thymesVar id="status" type="com.model.Status"*/-->
+                <option th:value="${status.getStatusId()}"> <th th:text="${status.getStatusName()}" th:name="status" /> </option>
+            </tr>
+            <option th:value="0"> <th th:text="#{manage_application.all}" th:name="status"/> </option>
+        </select>
+
+        <input type="submit" th:value="#{form.filter}"/>
+
+    </form>
+
+
+    <table class = "table table-striped">
+        <tr>
+            <th th:text="#{recruiter.name}"/>
+            <th th:text="#{recruiter.sendInDate}"/>
+            <th th:text="#{recruiter.status}"/>
+            <th th:text="#{recruiter.update}"/>
+
+        </tr>
+        <!--/*@thymesVar id="applikation" type="com.model.Applikation"*/-->
+        <tr th:each="applikation : ${applikations}">
+            <td th:text="${applikation.getPerson().getName()} + ' ' + ${applikation.getPerson().getSurName()}"/>
+            <td th:text="${applikation.getDateFixed()}"/>
+            <td th:text="${applikation.getStatus().getStatusName()}"/>
+            <td>
+                <a th:text="#{recruiter.update}" th:href="@{'/recruiter/manage_application/' + ${applikation.getApplikationId()}}"/>
+            </td>
+
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

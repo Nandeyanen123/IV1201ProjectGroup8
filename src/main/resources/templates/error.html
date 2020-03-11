@@ -3,7 +3,9 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'error')}">
 
   <body>
+  <div class="center">
     <p th:text="${message}">Exception message</p>
+  </div>
   </body>
 
 </html>
