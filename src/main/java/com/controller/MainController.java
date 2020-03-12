@@ -192,7 +192,7 @@ public class MainController {
 
     model.addAttribute("competence" , competence);
     model.addAttribute("map" , map);
-    return "/profile/profile_competence";
+    return "profile/profile_competence";
   }
 
   /**
@@ -207,7 +207,7 @@ public class MainController {
     LOGGER.trace("/profile/profile_competence/delete/" + componentName + " called by user: " + username);
 
     appService.deleteCompetenceProfile(username,componentName);
-    return "redirect:/profile/profile_competence";
+    return "redirect:profile/profile_competence";
   }
 
   /**
@@ -220,7 +220,7 @@ public class MainController {
   public String profile_competence_add(HttpServletRequest httpServletRequest, Competence competence) throws DatabaseExceptions, IllegalStateException {
     LOGGER.trace("/profile/profile_competence/add called by user: " + httpServletRequest.getUserPrincipal().getName());
     appService.addCompetenceProfile(httpServletRequest,competence);
-    return "redirect:/profile/profile_competence";
+    return "redirect:profile/profile_competence";
   }
 
   /**
@@ -241,7 +241,7 @@ public class MainController {
 
     ApplikationDAO applikationDAO = new ApplikationDAO(applikation, availability,competence_Profile);
     model.addAttribute("applikationDAO" , applikationDAO);
-    return "/application/application";
+    return "application/application";
   }
 
   /**
@@ -258,11 +258,11 @@ public class MainController {
 
     if (result.hasErrors()) {
       LOGGER.trace("/application (post) - User tried to addAvailability but failed with: " + result.getErrorCount() + " errors");
-      return "redirect:/application?badDates";
+      return "redirect:application?badDates";
     }
     else {
       LOGGER.trace("/application (post) - Successfully added new Availability");
-      return "redirect:/application?add";
+      return "redirect:application?add";
     }
   }
 
@@ -276,7 +276,7 @@ public class MainController {
   public String applicationDeleteAvailability(HttpServletRequest httpServletRequest, @PathVariable("id") int id) throws IllegalStateException, DatabaseExceptions {
     LOGGER.trace("/application/deleteAvailability/" + id + " was called by user: " + httpServletRequest.getUserPrincipal().getName());
     appService.deleteAvailability(httpServletRequest,id);
-    return"redirect:/application?deleteAvailability";
+    return"redirect:application?deleteAvailability";
   }
 
   /**
@@ -289,10 +289,8 @@ public class MainController {
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     appService.addApplication(person);
 
-    return "redirect:/application?add";
+    return "redirect:application?add";
   }
-
-  //TODO FIX
 
   /**
    * Deletes an Application from the users profile.
@@ -304,11 +302,11 @@ public class MainController {
   public String applicationDeleteApplication(HttpServletRequest httpServletRequest, @PathVariable("id") int id) throws IllegalStateException, DatabaseExceptions {
     appService.deleteApplication(httpServletRequest, id);
 
-    return "redirect:/application?deleteApplication";
+    return "redirect:application?deleteApplication";
   }
 
   /**
-   * Main page for Recruiter, lists all the Applications and supports filter.
+   * Main page for recruiter, lists all the Applications and supports filter.
    * @param model contains objects that may be showed in view-layer.
    * @return .html that should be loaded
    */
@@ -320,15 +318,13 @@ public class MainController {
     model.addAttribute("status", status);
     model.addAttribute("applikations", applikations);
 
-    return "/recruiter/recruiter";
+    return "recruiter/recruiter";
   }
-  //TODO FIX
-
   /**
    * Take cares of a filter search from /recruiter page.
    * @param model contains objects that may be showed in view-layer.
-   * @param availability which dates Recruiter wants to filter on
-   * @param statusFilter whicch status Recruiter wants to filter on
+   * @param availability which dates recruiter wants to filter on
+   * @param statusFilter whicch status recruiter wants to filter on
    * @return .html that should be loaded
    */
   @RequestMapping(value ="/recruiter", method = RequestMethod.POST)
@@ -340,7 +336,7 @@ public class MainController {
     model.addAttribute("status", status);
     model.addAttribute("applikations", applikations);
 
-    return "/recruiter/recruiter";
+    return "recruiter/recruiter";
   }
 
   /**
@@ -378,6 +374,6 @@ public class MainController {
     LOGGER.trace("/recruiter/manage_application/" + id + " was called by user: " + httpServletRequest.getUserPrincipal().getName());
     appService.applicationUpdateStatus(id, status.getStatusId());
 
-    return "redirect:/recruiter/manage_application/" + id;
+    return "redirect:recruiter/manage_application/" + id;
   }
 }
