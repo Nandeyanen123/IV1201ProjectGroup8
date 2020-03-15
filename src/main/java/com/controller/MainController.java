@@ -97,12 +97,13 @@ public class MainController {
   /**
    * This is used to return to homePage
    * @return String returns index
-   */
+
   @RequestMapping("/")
   public String homePage(){
     LOGGER.trace("/ called by user");
     return "/index";
   }
+   */
 
   /**
    * This is used to return login page
