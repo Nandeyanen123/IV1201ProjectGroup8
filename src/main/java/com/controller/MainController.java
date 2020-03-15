@@ -66,7 +66,7 @@ public class MainController {
     LOGGER.trace("/register/add" + "called by user");
     result=appService.addNewPerson(person,result,status);
     if (result.hasErrors())
-      return "/register";
+      return "register";
     else
       return "redirect:/login?success";
   }
@@ -147,7 +147,7 @@ public class MainController {
       result = appService.profileUpdate(updatedPerson,username,result,status);
     if(result.hasErrors()) {
       LOGGER.trace("/profile/profile_update called by user and number of errors on new data is: " + result.getErrorCount());
-      return "/profile/profile_update";
+      return "profile/profile_update";
     }
     else {
       LOGGER.trace("/profile/profile_update could successfully updated user: " + updatedPerson.getUserName());
@@ -226,7 +226,7 @@ public class MainController {
 
   /**
    * This method fetches all data needed for the rendering of the
-   * "Application" page and redirects the user there.
+   * "application" page and redirects the user there.
    * @param httpServletRequest with relevant authorization information
    * @param model of applikationDAO object
    * @return .html that should be loaded
@@ -296,7 +296,7 @@ public class MainController {
   //TODO FIX
 
   /**
-   * Deletes an Application from the users profile.
+   * Deletes an application from the users profile.
    * @param httpServletRequest This is the first parameter of the method applicationDeleteApplication
    * @param id This is the second parameter of the method applicationDeleteApplication
    * @return  .html that should be loaded
