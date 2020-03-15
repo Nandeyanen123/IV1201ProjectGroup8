@@ -192,7 +192,7 @@ public class MainController {
 
     model.addAttribute("competence" , competence);
     model.addAttribute("map" , map);
-    return "/profile/profile_competence";
+    return "profile/profile_competence";
   }
 
   /**
@@ -241,7 +241,7 @@ public class MainController {
 
     ApplikationDAO applikationDAO = new ApplikationDAO(applikation, availability,competence_Profile);
     model.addAttribute("applikationDAO" , applikationDAO);
-    return "/application/application";
+    return "application/application";
   }
 
   /**
