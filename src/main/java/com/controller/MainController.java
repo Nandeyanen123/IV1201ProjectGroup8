@@ -77,7 +77,7 @@ public class MainController {
    * @param model Yhis is the only parameter of the personForm method.
    * @return String this returns register
    */
-  @GetMapping("/register")
+  @RequestMapping(path = "/register")
   public String personForm(Model model) {
     LOGGER.trace("/register called by user");
     model.addAttribute("person", new Person());
