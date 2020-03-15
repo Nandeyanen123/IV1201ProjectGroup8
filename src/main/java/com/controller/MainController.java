@@ -81,7 +81,7 @@ public class MainController {
   public String personForm(Model model) {
     LOGGER.trace("/register called by user");
     model.addAttribute("person", new Person());
-    return "/register";
+    return "register";
   }
 
   /**
@@ -91,7 +91,7 @@ public class MainController {
   @RequestMapping("/index")
   String index() {
     LOGGER.trace("/index called by user");
-    return "/index";
+    return "index";
   }
 
   /**
@@ -112,7 +112,7 @@ public class MainController {
   @RequestMapping("/login")
   public String userLogin(){
     LOGGER.trace("/login called by user");
-    return "/login";
+    return "login";
   }
 
   /**
@@ -126,7 +126,7 @@ public class MainController {
     LOGGER.trace("/profile called by user: " + person.getUserName());
 
     model.addAttribute("person" , person);
-    return "/profile";
+    return "profile";
   }
 
   /**
@@ -151,7 +151,7 @@ public class MainController {
     }
     else {
       LOGGER.trace("/profile/profile_update could successfully updated user: " + updatedPerson.getUserName());
-      return "/profile";
+      return "profile";
     }
   }
 
@@ -165,7 +165,7 @@ public class MainController {
   public String profileUpdate2(Model model, HttpServletRequest httpServletRequest) throws DatabaseExceptions, IllegalStateException {
     Person person = appService.findPerson(httpServletRequest.getUserPrincipal().getName());
     model.addAttribute("person" , person);
-    return "/profile/profile_update";
+    return "profile/profile_update";
   }
 
   /**
@@ -175,7 +175,7 @@ public class MainController {
   @RequestMapping ("/logout-success")
   public String userLogout(HttpServletRequest httpServletRequest){
     LOGGER.trace("Successfully logged out user");
-    return "/logout";
+    return "logout";
   }
 
   /**
@@ -193,7 +193,7 @@ public class MainController {
 
     model.addAttribute("competence" , competence);
     model.addAttribute("map" , map);
-    return "/profile/profile_competence";
+    return "profile/profile_competence";
   }
 
   /**
@@ -242,7 +242,7 @@ public class MainController {
 
     ApplikationDAO applikationDAO = new ApplikationDAO(applikation, availability,competence_Profile);
     model.addAttribute("applikationDAO" , applikationDAO);
-    return "/application/application";
+    return "application/application";
   }
 
   /**
@@ -365,7 +365,7 @@ public class MainController {
     model.addAttribute("status", status);
     model.addAttribute("applikation", application);
 
-    return "/recruiter/manage_application";
+    return "recruiter/manage_application";
   }
 
   /**
