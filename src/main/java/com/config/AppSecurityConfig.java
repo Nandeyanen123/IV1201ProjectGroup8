@@ -31,16 +31,6 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     final String RECRUITER = "recruiter";
     final String APPLICANT = "applicant";
-/*
-    @Bean
-    public AuthenticationProvider authProvider()
-    {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder());
-        return provider;
-    }
-*/
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,7 +49,6 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                  .antMatchers("/", "/register/**", "/error", "/login*", "/stylesheets/**", "/lang-logo.png")
                     .permitAll()
                  .antMatchers("maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css").permitAll()
-                 .antMatchers("/lockedpage").hasAuthority(RECRUITER)
                  .antMatchers("/profile/**").hasAuthority(APPLICANT)
                  .antMatchers("/application/**").hasAuthority(APPLICANT)
                  .antMatchers("/recruiter/**").hasAuthority(RECRUITER)
