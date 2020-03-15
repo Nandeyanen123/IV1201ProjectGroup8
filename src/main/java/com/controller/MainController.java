@@ -340,7 +340,7 @@ public class MainController {
     model.addAttribute("status", status);
     model.addAttribute("applikations", applikations);
 
-    return "rediect:/recruiter/recruiter";
+    return "redirect:/recruiter/recruiter";
   }
 
   /**
